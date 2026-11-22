@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第16章 多智能体安全攻防</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +48,10 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第16章 多智能体安全攻防</h2>
+        <h1 class="page-title">第16章 多智能体安全攻防</h1>
 
         <p>上一章我们描绘了一幅Agent互联网的壮丽图景——成千上万的智能体通过A2A协议互相发现、通信、协作。听起来很美好，对吧？但作为工程师，我们都知道一个铁律：<strong>开放的系统必然面临攻击</strong>。当Agent从一个封闭的"单机程序"变成一个开放的"网络节点"，攻击面也指数级扩大了。</p>
 
@@ -100,6 +107,32 @@
         </table>
 
         <p>这个分类法的价值在于它帮我们建立了一个系统性的安全视图。大多数团队刚开始的时候只关注"提示注入"（输入攻击），而完全忽略了其他四个维度。结果往往是堵住了输入端的漏洞，却发现攻击从记忆端或工具链渗透进来了。</p>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 400" role="img" aria-labelledby="secT secD">
+          <title id="secT">多智能体安全威胁五维全景</title>
+          <desc id="secD">以 MAS 为中心，五类威胁分别从输入、记忆、工具链、协议、群体五个方向发起攻击，严重程度从极高到中高不等。</desc>
+          <rect width="820" height="400" fill="#fbfaff"/>
+          <defs><marker id="secA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/></marker></defs>
+          <rect x="330" y="150" width="160" height="70" rx="14" fill="#1e1b4b"/>
+          <text x="410" y="180" font-size="15" text-anchor="middle" fill="#ffffff">多智能体系统</text>
+          <text x="410" y="203" font-size="12" text-anchor="middle" fill="#c7d2fe">MAS 攻击面</text>
+          <rect x="310" y="22" width="200" height="52" rx="10" fill="#fecaca" stroke="#dc2626"/><text x="410" y="53" font-size="13" text-anchor="middle" fill="#7f1d1d">输入攻击（极高）</text>
+          <rect x="40" y="92" width="200" height="52" rx="10" fill="#fed7aa" stroke="#ea580c"/><text x="140" y="123" font-size="13" text-anchor="middle" fill="#7c2d12">记忆攻击（高）</text>
+          <rect x="580" y="92" width="200" height="52" rx="10" fill="#fde68a" stroke="#d97706"/><text x="680" y="123" font-size="13" text-anchor="middle" fill="#78350f">工具链攻击（高）</text>
+          <rect x="40" y="248" width="200" height="52" rx="10" fill="#bae6fd" stroke="#0284c7"/><text x="140" y="279" font-size="13" text-anchor="middle" fill="#075985">协议攻击（中高）</text>
+          <rect x="580" y="248" width="200" height="52" rx="10" fill="#ddd6fe" stroke="#7c3aed"/><text x="680" y="279" font-size="13" text-anchor="middle" fill="#4c1d95">群体攻击（中高）</text>
+          <line x1="410" y1="74" x2="410" y2="148" stroke="#6b7280" stroke-width="2" marker-end="url(#secA)"/>
+          <line x1="240" y1="118" x2="328" y2="168" stroke="#6b7280" stroke-width="2" marker-end="url(#secA)"/>
+          <line x1="580" y1="118" x2="492" y2="168" stroke="#6b7280" stroke-width="2" marker-end="url(#secA)"/>
+          <line x1="240" y1="274" x2="328" y2="204" stroke="#6b7280" stroke-width="2" marker-end="url(#secA)"/>
+          <line x1="580" y1="274" x2="492" y2="204" stroke="#6b7280" stroke-width="2" marker-end="url(#secA)"/>
+          <text x="410" y="370" font-size="13" text-anchor="middle" fill="#5b21b6">只防输入攻击 = 堵住一扇门，其余四扇敞开</text>
+        </svg>
+        </div>
+        <figcaption>MAS 的五维威胁全景：输入、记忆、工具链、协议、群体五类攻击可从不同入口抵达系统自身。多数团队初期只部署输入侧防护，而记忆投毒与恶意 MCP Server 等入口同样需要独立治理。</figcaption>
+        </figure>
 
         <div class="highlight">
             <strong>关键认知：</strong> 传统网络安全关注的是"软件漏洞"——缓冲区溢出、SQL注入、XSS等。Agent安全关注的是"模型行为漏洞"——攻击者通过操纵Agent的输入、记忆和推理过程，让Agent在<strong>完全符合技术规范</strong>的情况下做出有害行为。这是本质区别：你无法通过打补丁修复一个模型的安全问题，因为模型的行为是学习来的，不是编程来的。
@@ -329,7 +362,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="17.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
