@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第5章 CTDE：集中训练分散执行</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +48,10 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第5章 CTDE：集中训练分散执行</h2>
+        <h1 class="page-title">第5章 CTDE：集中训练分散执行</h1>
 
         <p>还记得我们在第3章讨论的第一个MAS核心挑战吗？<strong>非平稳性</strong>——其他Agent也在学习，这意味着从任何一个Agent的视角看，环境都在不断变化。现在加上第4章博弈论给我们的启示——每个Agent都在追逐自己的利益，均衡极难收敛。面对这双重困难，我们需要的是一种"既要又要"的架构：既要让Agent能利用全局信息做更好的学习，又要让Agent在部署时独立决策、不依赖中央协调。（CNN）</p>
 
@@ -63,6 +70,37 @@
         <div class="tip">
             <strong>关键理解：</strong> CTDE不是一个具体的算法，而是一种<strong>设计范式</strong>。它的核心假设是：训练和部署的环境条件可以不同——训练时享有"上帝视角"的奢侈，部署时回归"有限视角"的约束。这个假设在很多真实场景中成立（模拟器训练、限制性部署），但在一些特殊场景中（如边缘部署完全不可联网）可能不适用。理解这个假设，你才能判断CTDE是否适合你的场景。
         </div>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 340" role="img" aria-labelledby="ctdeT ctdeD">
+          <title id="ctdeT">CTDE：集中训练、分散执行</title>
+          <desc id="ctdeD">训练阶段全局状态 s 与全局奖励可用：各 Agent 的个体价值 Q_i 汇入混合网络得到全局 Q_tot。执行阶段每个 Agent 仅用局部观测 o_i 选择动作 argmax Q_i，彼此独立。</desc>
+          <rect width="820" height="340" fill="#fbfaff"/>
+          <text x="30" y="28" font-size="16" font-weight="700" fill="#4c1d95">CTDE：集中训练 · 分散执行</text>
+          <text x="30" y="58" font-size="14" fill="#5b21b6">训练阶段（全局状态 s 与全局奖励可用）</text>
+          <rect x="80" y="78" width="130" height="46" rx="10" fill="#ddd6fe" stroke="#7c3aed"/><text x="145" y="106" font-size="13" text-anchor="middle" fill="#4c1d95">Q₁(o₁,a₁)</text>
+          <rect x="240" y="78" width="130" height="46" rx="10" fill="#ddd6fe" stroke="#7c3aed"/><text x="305" y="106" font-size="13" text-anchor="middle" fill="#4c1d95">Q₂(o₂,a₂)</text>
+          <rect x="400" y="78" width="130" height="46" rx="10" fill="#ddd6fe" stroke="#7c3aed"/><text x="465" y="106" font-size="13" text-anchor="middle" fill="#4c1d95">Q₃(o₃,a₃)</text>
+          <rect x="590" y="70" width="190" height="62" rx="12" fill="#c4b5fd" stroke="#6d28d9"/>
+          <text x="685" y="97" font-size="13" text-anchor="middle" fill="#4c1d95">混合网络 Mixing</text>
+          <text x="685" y="117" font-size="13" text-anchor="middle" fill="#4c1d95">→ Q_tot(s,a)</text>
+          <line x1="210" y1="101" x2="586" y2="101" stroke="#7c3aed" stroke-width="1.5"/>
+          <line x1="370" y1="101" x2="586" y2="101" stroke="#7c3aed" stroke-width="1.5"/>
+          <line x1="530" y1="101" x2="586" y2="101" stroke="#7c3aed" stroke-width="1.5"/>
+          <line x1="30" y1="170" x2="790" y2="170" stroke="#a78bfa" stroke-dasharray="6 4"/>
+          <text x="410" y="164" font-size="12" text-anchor="middle" fill="#7c3aed">训练 / 执行解耦</text>
+          <text x="30" y="204" font-size="14" fill="#0f766e">执行阶段（仅局部观测 oᵢ，无需全局信息）</text>
+          <rect x="80" y="230" width="130" height="64" rx="10" fill="#ccfbf1" stroke="#14b8a6"/><text x="145" y="256" font-size="13" text-anchor="middle" fill="#0f766e">Agent 1</text><text x="145" y="278" font-size="12" text-anchor="middle" fill="#115e59">argmax Q₁</text>
+          <rect x="240" y="230" width="130" height="64" rx="10" fill="#ccfbf1" stroke="#14b8a6"/><text x="305" y="256" font-size="13" text-anchor="middle" fill="#0f766e">Agent 2</text><text x="305" y="278" font-size="12" text-anchor="middle" fill="#115e59">argmax Q₂</text>
+          <rect x="400" y="230" width="130" height="64" rx="10" fill="#ccfbf1" stroke="#14b8a6"/><text x="465" y="256" font-size="13" text-anchor="middle" fill="#0f766e">Agent 3</text><text x="465" y="278" font-size="12" text-anchor="middle" fill="#115e59">argmax Q₃</text>
+          <text x="145" y="314" font-size="12" text-anchor="middle" fill="#0f766e">o₁ → a₁</text>
+          <text x="305" y="314" font-size="12" text-anchor="middle" fill="#0f766e">o₂ → a₂</text>
+          <text x="465" y="314" font-size="12" text-anchor="middle" fill="#0f766e">o₃ → a₃</text>
+        </svg>
+        </div>
+        <figcaption>CTDE 的双层结构：训练时把全局状态 s 交给混合网络学习 Q_tot（可用全局奖励做监督），执行时只需各 Agent 的局部 Q_i 做 argmax。这种训练用全局、执行用局部的解耦是 VDN / QMIX / QPLEX 等价值分解算法的共同前提。</figcaption>
+        </figure>
 
         <h2>5.2 价值分解的IGM条件</h2>
 
@@ -88,9 +126,20 @@ argmax_a Q_tot(s, a) = (argmax_{a_1} Q_1(o_1, a_1),
 
         <p>VDN（Value Decomposition Network）是最早尝试实现IGM条件的算法之一，它的思路简单到令人惊讶：</p>
 
-        <pre><code>Q_tot(s, a) = sum_i Q_i(o_i, a_i)
+        <div class="math-scroll" data-math-scroll tabindex="0" role="region" aria-label="VDN 加性价值分解公式">
+            <math display="block" aria-label="Q 总量等于各智能体个体价值 Q i 之和">
+                <mrow>
+                    <msub><mi>Q</mi><mtext>tot</mtext></msub>
+                    <mo stretchy="false">(</mo><mi>s</mi><mo>,</mo><mi>a</mi><mo stretchy="false">)</mo>
+                    <mo>=</mo>
+                    <munder><mo>&#x2211;</mo><mi>i</mi></munder>
+                    <msub><mi>Q</mi><mi>i</mi></msub>
+                    <mo stretchy="false">(</mo><msub><mi>o</mi><mi>i</mi></msub><mo>,</mo><msub><mi>a</mi><mi>i</mi></msub><mo stretchy="false">)</mo>
+                </mrow>
+            </math>
+        </div>
 
-即将全局价值函数分解为每个Agent个体价值函数的简单加和。</code></pre>
+        <p>即将全局价值函数分解为每个 Agent 个体价值函数的简单加和。</p>
 
         <p>加性分解的优点是IGM条件自然满足——因为求和运算中，每个分量独立最大化即全局最大化。而且实现非常简单：每个Agent有一个独立的Q网络，输出Q<sub>i</sub>，将所有Q<sub>i</sub>相加得到Q<sub>tot</sub>，然后用标准的DQN损失函数来训练Q<sub>tot</sub>。</p>
 
@@ -104,11 +153,19 @@ argmax_a Q_tot(s, a) = (argmax_{a_1} Q_1(o_1, a_1),
 
         <p>QMIX在VDN的基础上迈出了一大步。它不假设Q<sub>tot</sub>是Q<sub>i</sub>的简单加和，而是用一个<strong>混合网络</strong>（Mixing Network）来学习Q<sub>tot</sub>和Q<sub>i</sub>之间的映射关系，同时施加<strong>单调性约束</strong>来保证IGM条件。</p>
 
-        <pre><code>单调性约束：
-∂Q_tot / ∂Q_i >= 0,  ∀i
+        <div class="math-scroll" data-math-scroll tabindex="0" role="region" aria-label="QMIX 单调性约束">
+            <math display="block" aria-label="Q 总量对每个智能体个体价值的偏导数非负，对所有 i 成立">
+                <mrow>
+                    <mfrac>
+                        <mrow><mo>&#x2202;</mo><msub><mi>Q</mi><mtext>tot</mtext></msub></mrow>
+                        <mrow><mo>&#x2202;</mo><msub><mi>Q</mi><mi>i</mi></msub></mrow>
+                    </mfrac>
+                    <mo>&#x2265;</mo><mn>0</mn><mo>,</mo><mspace width="0.5em"/><mo>&#x2200;</mo><mi>i</mi>
+                </mrow>
+            </math>
+        </div>
 
-即：任何单个Agent的Q_i增大，Q_tot不会减小。
-这保证了：每个Agent独立最大化Q_i  →  全局Q_tot也最大化。</code></pre>
+        <p>即：任何单个 Agent 的 Q<sub>i</sub> 增大，Q<sub>tot</sub> 不会减小。这保证了每个 Agent 独立最大化 Q<sub>i</sub> 时，全局 Q<sub>tot</sub> 也最大化。</p>
 
         <p>QMIX的混合网络是一个<strong>超网络</strong>（Hypernetwork）：它不直接学习混合网络权重，而是用一个单独的网络从全局状态s生成混合网络的权重参数。这样，混合网络的参数会随着环境状态的变化而动态调整，使得Q<sub>tot</sub>到Q<sub>i</sub>的映射具有丰富的表达能力——但仍被约束为单调的。</p>
 
@@ -261,7 +318,7 @@ argmax_a Q_tot(s, a) = (argmax_{a_1} Q_1(o_1, a_1),
             <a href="index.html">📖 返回目录</a>
             <a href="06.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
