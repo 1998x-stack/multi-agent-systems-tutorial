@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第3章 多智能体系统概述</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +48,10 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第3章 多智能体系统概述</h2>
+        <h1 class="page-title">第3章 多智能体系统概述</h1>
 
         <p>让我们从一个思想实验开始。假设你是一个项目经理，手下有一个"全能型员工"——他什么都会：写代码、做设计、写文档、谈客户、管进度。听起来很完美对吧？但现实中你会发现：这位全能选手的注意力被分散到各个领域，每个领域都做不到顶尖；一旦他生病或离职，整个项目就瘫痪了；而且他做的所有决策都只有一个视角——他自己的想法。</p>
 
@@ -88,6 +95,36 @@ Agentᵢ = (感知器: Oᵢ → Iᵢ,
         <h2>3.2 协同 / 竞争 / 混合系统</h2>
 
         <p>MAS的分类方式有很多种，但最核心的维度是Agent之间的关系——它们的目标是<strong>对齐</strong>的还是<strong>冲突</strong>的？根据这个维度，MAS可以分为三大类别：</p>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 280" role="img" aria-labelledby="masT masD">
+          <title id="masT">MAS 按目标关系的三大类别：完全协同、零和竞争、混合动机</title>
+          <desc id="masD">协同系统共享全局奖励 R，目标对齐；零和竞争中两 Agent 收益之和恒为零，目标对立；混合动机下两 Agent 既有重叠的共同利益，也有各自的个体利益。</desc>
+          <rect width="820" height="280" fill="#fbfaff"/>
+          <text x="30" y="26" font-size="16" font-weight="700" fill="#4c1d95">按目标关系划分的 MAS 三类</text>
+          <rect x="30" y="40" width="240" height="210" rx="16" fill="#ecfdf5" stroke="#10b981"/>
+          <text x="150" y="72" font-size="15" font-weight="600" text-anchor="middle" fill="#047857">完全协同</text>
+          <circle cx="118" cy="140" r="30" fill="#a7f3d0" stroke="#059669"/><text x="118" y="146" font-size="15" text-anchor="middle" fill="#064e3b">A</text>
+          <circle cx="182" cy="140" r="30" fill="#a7f3d0" stroke="#059669"/><text x="182" y="146" font-size="15" text-anchor="middle" fill="#064e3b">B</text>
+          <text x="150" y="200" font-size="13" text-anchor="middle" fill="#065f46">共享全局奖励 R</text>
+          <text x="150" y="224" font-size="13" text-anchor="middle" fill="#065f46">目标对齐</text>
+          <rect x="290" y="40" width="240" height="210" rx="16" fill="#fef2f2" stroke="#ef4444"/>
+          <text x="410" y="72" font-size="15" font-weight="600" text-anchor="middle" fill="#b91c1c">零和竞争</text>
+          <circle cx="378" cy="140" r="30" fill="#fecaca" stroke="#dc2626"/><text x="378" y="146" font-size="15" text-anchor="middle" fill="#7f1d1d">A</text>
+          <circle cx="442" cy="140" r="30" fill="#fecaca" stroke="#dc2626"/><text x="442" y="146" font-size="15" text-anchor="middle" fill="#7f1d1d">B</text>
+          <text x="410" y="200" font-size="13" text-anchor="middle" fill="#991b1b">rA + rB = 0</text>
+          <text x="410" y="224" font-size="13" text-anchor="middle" fill="#991b1b">目标对立</text>
+          <rect x="550" y="40" width="240" height="210" rx="16" fill="#eef2ff" stroke="#6366f1"/>
+          <text x="670" y="72" font-size="15" font-weight="600" text-anchor="middle" fill="#4338ca">混合动机</text>
+          <circle cx="650" cy="140" r="30" fill="#c7d2fe" fill-opacity="0.85" stroke="#4f46e5"/><text x="640" y="146" font-size="15" text-anchor="middle" fill="#312e81">A</text>
+          <circle cx="690" cy="140" r="30" fill="#ddd6fe" fill-opacity="0.75" stroke="#7c3aed"/><text x="702" y="146" font-size="15" text-anchor="middle" fill="#4c1d95">B</text>
+          <text x="670" y="200" font-size="13" text-anchor="middle" fill="#3730a3">共同利益 ∩ 个体利益</text>
+          <text x="670" y="224" font-size="13" text-anchor="middle" fill="#3730a3">部分对齐，部分冲突</text>
+        </svg>
+        </div>
+        <figcaption>三类 MAS 的目标结构：协同系统所有 Agent 优化同一全局奖励，竞争系统个体收益此消彼长（总收益恒为零），混合动机系统则同时存在共同利益与个体利益。工程中的多数真实场景属于混合动机类。</figcaption>
+        </figure>
 
         <h3>3.2.1 完全协同系统</h3>
 
@@ -263,7 +300,7 @@ Agentᵢ = (感知器: Oᵢ → Iᵢ,
             <a href="index.html">📖 返回目录</a>
             <a href="04.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
