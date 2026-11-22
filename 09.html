@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第9章 LangGraph：图状态机编排</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +48,10 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第9章 LangGraph：图状态机编排</h2>
+        <h1 class="page-title">第9章 LangGraph：图状态机编排</h1>
 
         <p>上一章我们深入探讨了LLM Agent的能力和局限。其中提到了一个关键痛点：<strong>LLM Agent的状态管理非常脆弱</strong>。一个纯ReAct循环的Agent在面对多步任务时，就像在走一条没有护栏的悬崖边小路——每一步都可能出错，且一旦出错就很难恢复。这个问题的本质在于：ReAct循环是"一条路走到黑"的线性流程，它没有"状态空间"的概念，每一步都依赖前一步的输出来维持上下文。</p>
 
@@ -163,6 +170,40 @@
         <h3>9.2.4 完整的图构建</h3>
 
         <p>把上面的元素组合起来，就得到了一个完整的Agent工作流图：</p>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 340" role="img" aria-labelledby="lgT lgD">
+          <title id="lgT">LangGraph Agent 工作流：节点、条件边与循环</title>
+          <desc id="lgD">入口进入 llm 节点；条件边根据状态判断：若有工具调用则进入 tools 节点，执行后回到 llm 形成循环；否则进入 final 节点生成答案并结束。每个节点执行后写入 Checkpoint。</desc>
+          <rect width="820" height="340" fill="#fbfaff"/>
+          <text x="30" y="28" font-size="16" font-weight="700" fill="#4c1d95">StateGraph：节点 + 边 + 循环 + Checkpoint</text>
+          <circle cx="40" cy="150" r="12" fill="#111827"/><text x="40" y="183" font-size="12" text-anchor="middle" fill="#374151">START</text>
+          <rect x="80" y="120" width="150" height="60" rx="12" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+          <text x="155" y="146" font-size="14" text-anchor="middle" fill="#4c1d95">llm</text>
+          <text x="155" y="166" font-size="12" text-anchor="middle" fill="#6d28d9">call_llm</text>
+          <polygon points="330,115 405,150 330,185 255,150" fill="#fef3c7" stroke="#f59e0b"/>
+          <text x="330" y="154" font-size="12" text-anchor="middle" fill="#92400e">路由</text>
+          <rect x="470" y="36" width="160" height="60" rx="12" fill="#ccfbf1" stroke="#14b8a6"/>
+          <text x="550" y="62" font-size="14" text-anchor="middle" fill="#0f766e">tools</text>
+          <text x="550" y="82" font-size="12" text-anchor="middle" fill="#115e59">execute_tool</text>
+          <rect x="470" y="210" width="160" height="60" rx="12" fill="#dcfce7" stroke="#22c55e"/>
+          <text x="550" y="236" font-size="14" text-anchor="middle" fill="#15803d">final</text>
+          <text x="550" y="256" font-size="12" text-anchor="middle" fill="#166534">generate_answer</text>
+          <line x1="52" y1="150" x2="78" y2="150" stroke="#7c3aed" stroke-width="2"/>
+          <line x1="230" y1="150" x2="253" y2="150" stroke="#7c3aed" stroke-width="2"/>
+          <line x1="390" y1="138" x2="468" y2="80" stroke="#f59e0b" stroke-width="2"/><text x="418" y="96" font-size="12" fill="#b45309">有工具</text>
+          <line x1="390" y1="162" x2="468" y2="228" stroke="#f59e0b" stroke-width="2"/><text x="410" y="205" font-size="12" fill="#b45309">无工具</text>
+          <path d="M550,36 C550,6 155,6 155,118" fill="none" stroke="#14b8a6" stroke-width="2" stroke-dasharray="6 4"/>
+          <text x="330" y="24" font-size="12" fill="#0f766e">循环：工具执行后回到 llm</text>
+          <line x1="630" y1="240" x2="700" y2="240" stroke="#22c55e" stroke-width="2"/>
+          <circle cx="712" cy="240" r="11" fill="#111827"/><text x="712" y="268" font-size="12" text-anchor="middle" fill="#374151">END</text>
+          <rect x="40" y="286" width="700" height="40" rx="10" fill="#f5f3ff" stroke="#c4b5fd" stroke-dasharray="6 4"/>
+          <text x="390" y="311" font-size="13" text-anchor="middle" fill="#5b21b6">每个节点执行后自动写入 Checkpoint → 可恢复 / 时间旅行 / 人工审批</text>
+        </svg>
+        </div>
+        <figcaption>LangGraph 的 Agent 工作流：llm 与 tools 构成循环，条件边（菱形路由）决定是继续调用工具还是进入 final 输出答案。Checkpoint 在每个节点后落盘，使中断恢复与时间旅行调试成为可能。</figcaption>
+        </figure>
 
         <pre><code># 初始化状态图
         graph = StateGraph(AgentState)
@@ -397,7 +438,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="10.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
