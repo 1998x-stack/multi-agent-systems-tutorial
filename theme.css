@@ -192,9 +192,12 @@ figcaption {
 
 /* === Responsive === */
 @media (max-width: 768px) {
-    .container { grid-template-columns: 1fr; }
+    .container { grid-template-columns: minmax(0, 1fr); }
     .sidebar { border-right: none; border-bottom: 2px solid #c4b5fd; }
     body { padding: 10px; }
-    .main-content { padding: 20px; }
+    .main-content { padding: 20px; min-width: 0; }
     .page-title { font-size: 1.5rem; }
+    table { table-layout: fixed; }
+    th, td { word-break: break-word; padding: 8px 6px; }
+    pre { max-width: 100%; }
 }
