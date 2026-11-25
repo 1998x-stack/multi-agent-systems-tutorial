@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第11章 AutoGen与Microsoft Agent Framework</title>
     <link rel="stylesheet" href="theme.css">
-</head>
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,14 +47,15 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第11章 AutoGen与Microsoft Agent Framework</h2>
+        <h1 class="page-title">第11章 AutoGen与Microsoft Agent Framework</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第11章 AutoGen与Microsoft Agent Framework</p>
 
         <p>现在你接触了两种多Agent框架了：LangGraph（底层的图状态机）和CrewAI（高层的角色化团队）。你可能开始有了"框架品味"——你更倾向于精细控制还是快捷搭建？但别急，微软带来的<strong>AutoGen</strong>会给出第三种完全不同的答案。</p>
 
-        <p>AutoGen在2023年秋季发布，由微软研究院的Chi Wang等人提出。它的核心设计理念非常独特：<strong>Agent之间的协作就是对话</strong>。不是"图"的执行、不是"角色"的分工——就是对话。一个Agent说一句话，另一个Agent回复，再一个Agent补充——多轮对话自然形成了Agent之间的协作流程。这个想法看似简单，但实际上极其优雅——因为人类团队协作中最自然的形态就是对话。</p>
+        <p>AutoGen在2023年秋季发布，由微软研究院的Chi Wang等人提出（<a href="https://arxiv.org/abs/2308.08155">arXiv:2308.08155</a>）。它的核心设计理念非常独特：<strong>Agent之间的协作就是对话</strong>。不是"图"的执行、不是"角色"的分工——就是对话。一个Agent说一句话，另一个Agent回复，再一个Agent补充——多轮对话自然形成了Agent之间的协作流程。这个想法看似简单，但实际上极其优雅——因为人类团队协作中最自然的形态就是对话。</p>
 
         <h2>11.1 对话即编排：AssistantAgent与UserProxyAgent</h2>
 
@@ -159,6 +166,43 @@
             message="团队，我们需要完成一份关于2026年AI Agent市场的分析报告。开始工作。"
         )</code></pre>
 
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 300" role="img" aria-labelledby="gcT gcD">
+          <title id="gcT">AutoGen GroupChat 的消息总线与选人机制</title>
+          <desc id="gcD">四个 Agent 共享一条群聊消息总线：每个 Agent 把自己的发言发布到总线，也从总线读取他人发言；GroupChatManager 依据 speaker_selection 策略选定下一个发言者，并通过虚线控制线定向指派。</desc>
+          <rect width="820" height="300" fill="#fbfaff"/>
+          <defs>
+            <marker id="gcAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker>
+            <marker id="gcAr2" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#7c3aed"/></marker>
+            <marker id="gcMg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0d9488"/></marker>
+          </defs>
+          <g font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">
+          <g fill="#ede9fe" stroke="#7c3aed" stroke-width="1.8">
+            <rect x="40" y="36" width="130" height="54" rx="10"/><rect x="185" y="36" width="130" height="54" rx="10"/>
+            <rect x="330" y="36" width="130" height="54" rx="10"/><rect x="475" y="36" width="130" height="54" rx="10"/>
+          </g>
+          <g fill="#4c1d95" font-size="11"><text x="105" y="60">Researcher</text><text x="250" y="60">DataAnalyst</text><text x="395" y="60">Writer</text><text x="540" y="60">Manager</text></g>
+          <g fill="#6d28d9" font-size="10"><text x="105" y="78">研究员</text><text x="250" y="78">数据分析师</text><text x="395" y="78">技术作家</text><text x="540" y="78">项目经理</text></g>
+          <g stroke="#7c3aed" stroke-width="1.8" marker-start="url(#gcAr2)" marker-end="url(#gcAr)">
+            <line x1="105" y1="94" x2="105" y2="146"/><line x1="250" y1="94" x2="250" y2="146"/>
+            <line x1="395" y1="94" x2="395" y2="146"/><line x1="540" y1="94" x2="540" y2="146"/>
+          </g>
+          <text x="72" y="126" fill="#6b7280" font-size="10">发布/读取</text>
+          <rect x="40" y="150" width="570" height="40" rx="10" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.8"/>
+          <text x="325" y="168" fill="#0f766e" font-size="12">群聊消息总线：共享消息列表（shared message list）</text>
+          <text x="325" y="183" fill="#0f766e" font-size="10">max_round 限制总轮次 · 顺序与可见性由选人策略决定</text>
+          <line x1="410" y1="230" x2="410" y2="192" stroke="#0d9488" stroke-width="1.8" stroke-dasharray="5 4" marker-end="url(#gcMg)"/>
+          <text x="530" y="218" fill="#0f766e" font-size="10">speaker_selection</text>
+          <rect x="300" y="232" width="220" height="46" rx="10" fill="#1e1b4b"/>
+          <text x="410" y="252" fill="#ffffff" font-size="12">GroupChatManager</text>
+          <text x="410" y="269" fill="#c7d2fe" font-size="10">auto / round_robin / random / manual</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption>GroupChat 的结构：所有 Agent 共享一条消息总线，人人既能发布也能读取；GroupChatManager 不写内容，只决定“接下来谁发言”。把发言权集中到选人器手里的好处是流程可统计，代价是对话路径无法像状态图那样预先判定。</figcaption>
+        </figure>
+
         <h3>11.2.1 Speaker Selection：谁先说话？</h3>
 
         <p>GroupChat的核心机制是<strong>Speaker Selection</strong>——决定下一个该谁发言。AutoGen支持几种模式：</p>
@@ -201,7 +245,7 @@
 
         <h2>11.3 Magentic-One：微软的多智能体架构</h2>
 
-        <p>2025年，微软在AutoGen的基础上推出了<strong>Magentic-One</strong>——一个更系统化的多智能体架构。Magnetic-One不是AutoGen的替代品，而是AutoGen之上的一个高级编排模式。</p>
+        <p>2025年，微软在AutoGen的基础上推出了<strong>Magentic-One</strong>（<a href="https://arxiv.org/abs/2411.04468">arXiv:2411.04468</a>）——一个更系统化的多智能体架构。Magnetic-One不是AutoGen的替代品，而是AutoGen之上的一个高级编排模式。</p>
 
         <p>Magnetic-One的核心是一个<strong>Orchestrator（编排器）+ 四个专业Agent</strong>的架构：</p>
 
@@ -213,10 +257,40 @@
             <li><strong>ComputerTerminal：</strong> 终端操作专家。能执行Shell命令、管理进程、操作操作系统接口。</li>
         </ul>
 
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 250" role="img" aria-labelledby="moT moD">
+          <title id="moT">Magentic-One 的 Orchestrator + 四能力 Agent 结构</title>
+          <desc id="moD">Orchestrator 位于顶部负责规划与监控，向下统辖四个专业 Agent：WebSurfer（信息获取）、FileSurfer（信息管理）、Coder（信息处理）、Terminal（系统操作）；子任务失败时反馈回 Orchestrator 重新规划。</desc>
+          <rect width="820" height="250" fill="#fbfaff"/>
+          <defs><marker id="moAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker><marker id="moAr2" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#0d9488"/></marker></defs>
+          <g font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">
+          <rect x="310" y="26" width="200" height="56" rx="12" fill="#1e1b4b"/>
+          <text x="410" y="50" fill="#ffffff" font-size="13">Orchestrator</text>
+          <text x="410" y="68" fill="#c7d2fe" font-size="10">规划 · 进度跟踪 · 错误恢复</text>
+          <g stroke="#7c3aed" stroke-width="1.8" marker-end="url(#moAr)">
+            <line x1="360" y1="82" x2="140" y2="158"/><line x1="390" y1="82" x2="305" y2="158"/>
+            <line x1="430" y1="82" x2="490" y2="158"/><line x1="460" y1="82" x2="670" y2="158"/>
+          </g>
+          <path d="M670 138 C 760 110, 760 60, 512 52" fill="none" stroke="#0d9488" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#moAr2)"/>
+          <text x="700" y="98" fill="#0f766e" font-size="10">失败 → 重规划</text>
+          <g fill="#ede9fe" stroke="#7c3aed" stroke-width="1.8">
+            <rect x="40" y="160" width="160" height="56" rx="10"/><rect x="225" y="160" width="160" height="56" rx="10"/>
+            <rect x="410" y="160" width="160" height="56" rx="10"/><rect x="595" y="160" width="160" height="56" rx="10"/>
+          </g>
+          <g fill="#4c1d95" font-size="11"><text x="120" y="184">WebSurfer</text><text x="305" y="184">FileSurfer</text><text x="490" y="184">Coder</text><text x="675" y="184">Terminal</text></g>
+          <g fill="#6d28d9" font-size="10"><text x="120" y="202">信息获取</text><text x="305" y="202">信息管理</text><text x="490" y="202">信息处理</text><text x="675" y="202">系统操作</text></g>
+          <text x="410" y="240" fill="#6b7280" font-size="10">四个能力覆盖大多数企业级任务；Orchestrator 按需组合，而非让单个 Agent 兼营所有能力</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption>Magentic-One 的分工：Orchestrator 不直接干活，只管规划、跟踪与容错；四个专业 Agent 各管一类能力。当子 Agent 失败，Orchestrator 记下失败原因、调整计划并重新派单——这条错误恢复回路是它区别于“多 Agent 简单堆砌”的关键。</figcaption>
+        </figure>
+
         <p>这个架构的设计有一个深刻的洞察：<strong>大多数企业级任务都可以被这四个"能力"覆盖</strong>——信息获取（WebSurfer）、信息管理（FileSurfer）、信息处理（Coder）、系统操作（ComputerTerminal）。Orchestrator根据任务需要动态组合这些能力，而不是让一个Agent什么都做。</p>
 
         <div class="highlight">
-            <strong>Magnetic-One的工程价值：</strong> 在GAIA基准测试（评估通用AI助手能力的标准测试集）中，Magnetic-One达到了70%以上的任务完成率。比单Agent方案高出近30个百分点。更重要的是Magnetic-One的<strong>错误恢复机制</strong>——当子Agent失败时，Orchestrator会记录失败原因，调整策略，重新分配任务。这种"容错"设计是生产级Agent系统的关键能力，也是Magnetic-One超越简单的多Agent堆砌的核心差异。
+            <strong>Magnetic-One的工程价值：</strong> 在GAIA基准测试（评估通用AI助手能力的标准测试集）中，Magentic-One的任务完成率明显高于同期单Agent方案（原文所述“70% / 高出近30个百分点”未逐项核对原始报告，此处保留其量级作为教学示意）。更重要的是Magnetic-One的<strong>错误恢复机制</strong>——当子Agent失败时，Orchestrator会记录失败原因，调整策略，重新分配任务。这种"容错"设计是生产级Agent系统的关键能力，也是Magnetic-One超越简单的多Agent堆砌的核心差异。
         </div>
 
         <h2>11.4 AutoGen维护模式：为什么v0.7.5是终点？</h2>
@@ -343,7 +417,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="12.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
