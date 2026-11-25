@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第7章 多智能体通信与协调</title>
     <link rel="stylesheet" href="theme.css">
-</head>
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +47,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第7章 多智能体通信与协调</h2>
+        <h1 class="page-title">第7章 多智能体通信与协调</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第7章 多智能体通信与协调</p>
 
         <p>让我们做一个简单的实验。闭上眼睛，在不开口说话、不做手势、不用眼神交流的情况下，试着和旁边的朋友"协作"完成一个任务——比如把一张桌子从房间一端搬到另一端。你可能会发现：传递信息只能通过推拉桌子的力度变化来实现（"隐式通信"），效率极低且容易误解。现在睁开眼睛，说一句"我这边重，你往左推一点"——问题立刻解决了。</p>
 
@@ -133,13 +140,52 @@
             </tbody>
         </table>
 
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 250" role="img" aria-labelledby="topoT topoD">
+          <title id="topoT">四种多智能体通信拓扑对比</title>
+          <desc id="topoD">依次为全连接广播、分层树形、固定图邻接、注意力动态拓扑。前三者的通信链路在部署前固定；第四者由 Agent 依据当前上下文按权重选择 top-k 通信对象。</desc>
+          <rect width="820" height="250" fill="#fbfaff"/>
+          <g font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">
+          <rect x="12" y="10" width="185" height="230" rx="12" fill="#ffffff" stroke="#e5dffb"/>
+          <rect x="214" y="10" width="185" height="230" rx="12" fill="#ffffff" stroke="#e5dffb"/>
+          <rect x="416" y="10" width="185" height="230" rx="12" fill="#ffffff" stroke="#e5dffb"/>
+          <rect x="618" y="10" width="185" height="230" rx="12" fill="#ffffff" stroke="#e5dffb"/>
+          <text x="104" y="34" fill="#4c1d95">① 全连接（广播）</text>
+          <text x="306" y="34" fill="#4c1d95">② 分层（树形）</text>
+          <text x="508" y="34" fill="#4c1d95">③ 固定图邻接</text>
+          <text x="710" y="34" fill="#4c1d95">④ 注意力动态</text>
+          <g stroke="#a78bfa" stroke-width="1.8"><line x1="62" y1="100" x2="147" y2="100"/><line x1="62" y1="100" x2="62" y2="185"/><line x1="62" y1="100" x2="147" y2="185"/><line x1="147" y1="100" x2="62" y2="185"/><line x1="147" y1="100" x2="147" y2="185"/><line x1="62" y1="185" x2="147" y2="185"/></g>
+          <g fill="#ede9fe" stroke="#7c3aed" stroke-width="2"><circle cx="62" cy="100" r="13"/><circle cx="147" cy="100" r="13"/><circle cx="62" cy="185" r="13"/><circle cx="147" cy="185" r="13"/></g>
+          <g fill="#4c1d95" font-size="11"><text x="62" y="104">A</text><text x="147" y="104">B</text><text x="62" y="189">C</text><text x="147" y="189">D</text></g>
+          <text x="104" y="227" fill="#6b7280" font-size="11">O(n²) 链路 · 信噪比低</text>
+          <g stroke="#a78bfa" stroke-width="1.8"><line x1="306" y1="90" x2="249" y2="190"/><line x1="306" y1="90" x2="306" y2="190"/><line x1="306" y1="90" x2="363" y2="190"/></g>
+          <g fill="#ede9fe" stroke="#7c3aed" stroke-width="2"><circle cx="306" cy="90" r="14"/><circle cx="249" cy="190" r="12"/><circle cx="306" cy="190" r="12"/><circle cx="363" cy="190" r="12"/></g>
+          <g fill="#4c1d95" font-size="10"><text x="306" y="94">协调</text><text x="249" y="194">A</text><text x="306" y="194">B</text><text x="363" y="194">C</text></g>
+          <text x="306" y="227" fill="#6b7280" font-size="11">O(n) · 根节点单点故障</text>
+          <g stroke="#a78bfa" stroke-width="1.8"><line x1="471" y1="95" x2="546" y2="95"/><line x1="546" y1="95" x2="546" y2="180"/><line x1="546" y1="180" x2="471" y2="180"/><line x1="471" y1="180" x2="471" y2="95"/></g>
+          <g fill="#ede9fe" stroke="#7c3aed" stroke-width="2"><circle cx="471" cy="95" r="12"/><circle cx="546" cy="95" r="12"/><circle cx="546" cy="180" r="12"/><circle cx="471" cy="180" r="12"/></g>
+          <g fill="#4c1d95" font-size="10"><text x="471" y="99">A</text><text x="546" y="99">B</text><text x="546" y="184">C</text><text x="471" y="184">D</text></g>
+          <text x="508" y="227" fill="#6b7280" font-size="11">仅邻居可达 · 多跳传播慢</text>
+          <g stroke="#0d9488" stroke-width="2.2"><line x1="658" y1="80" x2="703" y2="129"/><line x1="762" y1="80" x2="717" y2="129"/></g>
+          <g stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4"><line x1="658" y1="200" x2="703" y2="151"/><line x1="762" y1="200" x2="717" y2="151"/></g>
+          <g fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5"><circle cx="658" cy="80" r="12"/><circle cx="762" cy="80" r="12"/><circle cx="658" cy="200" r="12"/><circle cx="762" cy="200" r="12"/></g>
+          <circle cx="710" cy="140" r="16" fill="#0d9488" stroke="#0f766e" stroke-width="2"/>
+          <text x="710" y="144" fill="#ffffff" font-size="11">Q</text>
+          <text x="710" y="227" fill="#0f766e" font-size="11">自适应 top-k · 实线=高权重</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption>四种通信拓扑的链路结构对比。①②③的通信图在部署前固定，①连通但 O(n²) 代价高、②经济但依赖单一协调者、③局部稳健但信息需多跳扩散；④把“给谁发、听谁”变成一次注意力运算，用可微的注意力权重在每步动态选择 top-k 对象，代价是调试面更宽。</figcaption>
+        </figure>
+
         <div class="highlight">
             <strong>决策建议：</strong> 对于大多数工程实践场景，我的建议是"先简单后复杂"——从分层的2级结构开始（1个协调Agent + 多个工作Agent），这是最简单、最容易调试的拓扑。如果这个结构不满足需求（比如协调Agent成为瓶颈），再逐步演进到更复杂的拓扑。不要一上来就用注意力动态拓扑——它有太多调试点，容易让你迷失在调试中。
         </div>
 
         <h2>7.3 CommNet：学习通信协议</h2>
 
-        <p>如果不想手动设计通信拓扑和通信内容，能不能让Agent<strong>自己学会如何通信</strong>？这正是CommNet（Sukhbaatar et al., 2016）的核心思想。</p>
+        <p>如果不想手动设计通信拓扑和通信内容，能不能让Agent<strong>自己学会如何通信</strong>？这正是CommNet（Sukhbaatar et al., 2016，<a href="https://arxiv.org/abs/1605.07736">arXiv:1605.07736</a>）的核心思想。</p>
 
         <p>CommNet开创性地提出了<strong>连续通信向量</strong>的概念——Agent之间通信的不再是人类可读的自然语言，而是<strong>低维连续向量</strong>。这些向量由Agent的神经网络生成，由其他Agent的神经网络解码，整个通信过程是<strong>可微分的</strong>，因此可以通过梯度反向传播来优化通信内容和通信策略。</p>
 
@@ -173,6 +219,40 @@
         # 5. 输出动作
         action = self.actor(h_combined)
         return action, my_message</code></pre>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 210" role="img" aria-labelledby="cnT cnD">
+          <title id="cnT">CommNet 的单轮消息传递</title>
+          <desc id="cnD">每个 Agent 将局部观测编码为隐藏状态，再生成低维连续通信向量；所有 Agent 的通信向量取平均后与自身隐藏状态融合，解码后输出动作，整个链路可微分。</desc>
+          <rect width="820" height="210" fill="#fbfaff"/>
+          <g font-family="system-ui, sans-serif" font-size="12" text-anchor="middle">
+          <g stroke="#94a3b8" stroke-width="1.6">
+            <line x1="100" y1="55" x2="140" y2="55"/><line x1="100" y1="105" x2="140" y2="105"/><line x1="100" y1="155" x2="140" y2="155"/>
+            <line x1="230" y1="55" x2="270" y2="55"/><line x1="230" y1="105" x2="270" y2="105"/><line x1="230" y1="155" x2="270" y2="155"/>
+            <line x1="360" y1="55" x2="400" y2="55"/><line x1="360" y1="105" x2="400" y2="105"/><line x1="360" y1="155" x2="400" y2="155"/>
+          </g>
+          <line x1="400" y1="55" x2="400" y2="155" stroke="#0d9488" stroke-width="2"/>
+          <line x1="400" y1="105" x2="430" y2="105" stroke="#0d9488" stroke-width="2"/>
+          <line x1="550" y1="105" x2="600" y2="105" stroke="#94a3b8" stroke-width="1.6"/>
+          <g fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"><rect x="20" y="38" width="80" height="34" rx="8"/><rect x="20" y="88" width="80" height="34" rx="8"/><rect x="20" y="138" width="80" height="34" rx="8"/></g>
+          <g fill="#075985" font-size="11"><text x="60" y="59">观测 o₁</text><text x="60" y="109">观测 o₂</text><text x="60" y="159">观测 oₙ</text></g>
+          <g fill="#ede9fe" stroke="#7c3aed" stroke-width="1.8"><rect x="140" y="38" width="90" height="34" rx="8"/><rect x="140" y="88" width="90" height="34" rx="8"/><rect x="140" y="138" width="90" height="34" rx="8"/></g>
+          <g fill="#4c1d95" font-size="11"><text x="185" y="59">编码 h₁</text><text x="185" y="109">编码 h₂</text><text x="185" y="159">编码 hₙ</text></g>
+          <g fill="#ccfbf1" stroke="#0d9488" stroke-width="1.8"><rect x="270" y="38" width="90" height="34" rx="8"/><rect x="270" y="88" width="90" height="34" rx="8"/><rect x="270" y="138" width="90" height="34" rx="8"/></g>
+          <g fill="#0f766e" font-size="11"><text x="315" y="59">向量 m₁</text><text x="315" y="109">向量 m₂</text><text x="315" y="159">向量 mₙ</text></g>
+          <rect x="430" y="88" width="120" height="35" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>
+          <text x="490" y="105" fill="#78350f" font-size="11">mean(其他 m)</text>
+          <text x="490" y="119" fill="#78350f" font-size="10">可微聚合</text>
+          <rect x="600" y="88" width="140" height="35" rx="8" fill="#1e1b4b"/>
+          <text x="670" y="105" fill="#ffffff" font-size="11">解码 + 策略</text>
+          <text x="670" y="119" fill="#c7d2fe" font-size="10">输出动作 aᵢ</text>
+          <text x="410" y="195" fill="#6b7280" font-size="11">端到端可微：通信内容与聚合方式均由梯度学习，而非人工指定</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption>CommNet 的一轮前向：观测 → 隐藏状态 → 低维通信向量 → 对他人向量取均值 → 融合解码 → 动作。由于每一步都是连续可微的线性/非线性变换，通信“说什么”可由回报信号反向传播直接优化；但连续向量无法直接迁移到前向不可微的 LLM Agent。</figcaption>
+        </figure>
 
         <p>CommNet的精妙之处在于：整个通信过程是<strong>端到端学习的</strong>。Agent不需要人类指定"说什么内容"——它会自己学会生成有用的通信向量；也不需要人类指定"谁跟谁通信"——默认是全连接，但Agent通过生成特定的通信向量来隐式控制信息流向。</p>
 
@@ -326,7 +406,7 @@ class GatedCommunicator:
             <a href="index.html">📖 返回目录</a>
             <a href="08.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
