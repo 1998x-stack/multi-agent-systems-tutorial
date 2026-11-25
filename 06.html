@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第6章 多智能体策略梯度</title>
     <link rel="stylesheet" href="theme.css">
-</head>
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +48,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第6章 多智能体策略梯度</h2>
+        <h1 class="page-title">第6章 多智能体策略梯度</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第6章 多智能体策略梯度</p>
 
         <p>上一章我们详细讨论了CTDE框架下的价值分解方法——VDN、QMIX、QPLEX。这些方法通过学习联合动作价值函数Q<sub>tot</sub>并将其分解为个体Q<sub>i</sub>，来间接得到每个Agent的策略。但价值基方法有一个天然局限：它处理<strong>连续动作空间</strong>非常困难。想象一下，一个机器人Agent的动作是"以0.7m/s的速度向右前方45度移动"——这不是选一个离散动作，而是要从一个连续的高维空间中输出一个向量。价值基方法需要遍历所有动作来计算argmax，这在连续空间中是不可能的。</p>
 
@@ -54,7 +62,7 @@
 
         <h2>6.1 MADDPG：多智能体深度确定性策略梯度</h2>
 
-        <p>MADDPG（Multi-Agent Deep Deterministic Policy Gradient）可以说是多Agent策略梯度方法中最有影响力的工作，由Lowe等人在2017年提出。它采用CTDE范式，核心设计如下：</p>
+        <p>MADDPG（Multi-Agent Deep Deterministic Policy Gradient）可以说是多Agent策略梯度方法中最有影响力的工作，由Lowe等人在2017年提出（<a href="https://arxiv.org/abs/1706.02275">arXiv:1706.02275</a>）。它采用CTDE范式，核心设计如下：</p>
 
         <p><strong>训练阶段（集中评论家）：</strong> 每个Agent有一个<strong>集中的评论家</strong>（Critic）Q<sub>i</sub>(s, a<sub>1</sub>, ..., a<sub>N</sub>)，其输入是所有Agent的观测（或状态）和所有Agent的动作——即全局信息。这意味着评论家知道"所有人正在做什么"。</p>
 
@@ -63,6 +71,42 @@
         <p><strong>探索机制：</strong> MADDPG使用<strong>高斯噪声</strong>来鼓励探索——在Actor输出的动作上添加高斯噪声：a<sub>i</sub> = μ<sub>i</sub>(o<sub>i</sub>) + N(0, σ)。σ的衰减策略对训练稳定性影响很大。</p>
 
         <p>MADDPG的另一个重要贡献是<strong>策略集成</strong>：它维护多个子策略，训练时随机选择一个子策略来收集经验，但优化时用所有子策略的平均梯度。这有效缓解了MAS中策略不收敛的问题。</p>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 340" role="img" aria-labelledby="ctdeT ctdeD">
+          <title id="ctdeT">MADDPG 的 CTDE：集中评论家 + 分散 Actor</title>
+          <desc id="ctdeD">三个 Agent 各自用局部观测 o_i 输出动作 a_i；所有 Agent 的观测与动作汇总为一个共享信息向量，送入各自的集中评论家 Q_i；评论家只在训练阶段启用，执行阶段仅保留分散 Actor。</desc>
+          <rect width="820" height="340" fill="#fbfaff"/>
+          <defs>
+            <marker id="cAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker>
+            <marker id="cAr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0d9488"/></marker>
+          </defs>
+          <rect x="25" y="228" width="770" height="96" rx="14" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="7 5"/>
+          <text x="775" y="222" fill="#64748b" font-size="11" text-anchor="end">仅训练阶段启用（执行时丢弃）</text>
+          <g font-family="system-ui, sans-serif" text-anchor="middle">
+          <g fill="#ede9fe" stroke="#7c3aed" stroke-width="1.8">
+            <rect x="40" y="30" width="190" height="64" rx="10"/><rect x="315" y="30" width="190" height="64" rx="10"/><rect x="590" y="30" width="190" height="64" rx="10"/>
+          </g>
+          <g fill="#4c1d95"><text x="135" y="54" font-size="12">Actor μ₁</text><text x="410" y="54" font-size="12">Actor μ₂</text><text x="685" y="54" font-size="12">Actor μ₃</text></g>
+          <g fill="#6d28d9" font-size="10"><text x="135" y="74">输入：o₁（局部）</text><text x="410" y="74">输入：o₂（局部）</text><text x="685" y="74">输入：o₃（局部）</text></g>
+          <g stroke="#7c3aed" stroke-width="1.6" marker-end="url(#cAr)"><line x1="135" y1="94" x2="135" y2="148"/><line x1="410" y1="94" x2="410" y2="148"/><line x1="685" y1="94" x2="685" y2="148"/></g>
+          <g fill="#6b7280" font-size="9"><text x="168" y="126">a₁</text><text x="443" y="126">a₂</text><text x="718" y="126">a₃</text></g>
+          <rect x="40" y="150" width="740" height="40" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.8"/>
+          <text x="410" y="167" fill="#78350f" font-size="11">共享信息：所有 Agent 的观测与动作（s, a₁…a_N）</text>
+          <text x="410" y="182" fill="#92400e" font-size="10">集中评论家能看到“所有人正在做什么”</text>
+          <g stroke="#0d9488" stroke-width="1.6" marker-end="url(#cAr2)"><line x1="135" y1="190" x2="135" y2="238"/><line x1="410" y1="190" x2="410" y2="238"/><line x1="685" y1="190" x2="685" y2="238"/></g>
+          <g fill="#ccfbf1" stroke="#0d9488" stroke-width="1.8">
+            <rect x="40" y="240" width="190" height="64" rx="10"/><rect x="315" y="240" width="190" height="64" rx="10"/><rect x="590" y="240" width="190" height="64" rx="10"/>
+          </g>
+          <g fill="#0f766e"><text x="135" y="264" font-size="12">Critic Q₁</text><text x="410" y="264" font-size="12">Critic Q₂</text><text x="685" y="264" font-size="12">Critic Q₃</text></g>
+          <g fill="#115e59" font-size="10"><text x="135" y="284">输出价值 → 回传梯度</text><text x="410" y="284">输出价值 → 回传梯度</text><text x="685" y="284">输出价值 → 回传梯度</text></g>
+          <text x="410" y="336" fill="#6b7280" font-size="10">每个 Agent 有自己的一份评论家；Actor 梯度由评论家提供，但 Actor 输入仍只含自己的局部观测</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption>MADDPG 的 CTDE：上面是只在执行时使用的分散 Actor（输入仅局部观测 o_i），中间是汇总全部 Agent 观测与动作的共享信息，下面是仅训练时使用的集中评论家 Q_i。关键点在于“不对称”——评论家可以看全局，Actor 却只能看局部，因此训练完可把评论家整个丢弃，部署时不需要它。</figcaption>
+        </figure>
 
         <pre><code># MADDPG中的集中评论家训练（简化伪代码）
 def train_maddpg(agents, replay_buffer, batch_size):
@@ -110,15 +154,22 @@ def train_maddpg(agents, replay_buffer, batch_size):
 
         <p>MASAC的核心创新是引入<strong>熵正则化</strong>——在策略优化目标中加入策略的熵项。这意味着Agent不仅要最大化期望累积奖励，还要尽量保持策略的随机性（避免过早陷入确定性策略）。</p>
 
-        <pre><code># MASAC的目标函数
-J(π_i) = E[ Q_i(s, a_1, ..., a_N)
-         - α * log(π_i(a_i | o_i)) ]
-
-其中：
-- α > 0 是温度系数，控制熵正则化的强度
-- log(π_i(a_i | o_i)) 是策略π_i的熵
-- 高α → 更多探索（策略更随机）
-- 低α → 更注重利用（策略更确定）</code></pre>
+        <div class="math-scroll" tabindex="0" role="region" aria-label="MASAC 的目标函数">
+          <math display="block" aria-label="MASAC 目标函数：期望回报 Q_i 减去温度系数 alpha 乘以策略的对数概率">
+            <mi>J</mi><mo>(</mo><msub><mi>π</mi><mi>i</mi></msub><mo>)</mo>
+            <mo>=</mo>
+            <msub><mi>𝔼</mi><mrow><mi>s</mi><mo>,</mo><msub><mi>a</mi><mn>1</mn></msub><mo>,</mo><mo>…</mo><mo>,</mo><msub><mi>a</mi><mi>N</mi></msub></mrow></msub>
+            <mo>[</mo>
+            <msub><mi>Q</mi><mi>i</mi></msub><mo>(</mo><mi>s</mi><mo>,</mo><msub><mi>a</mi><mn>1</mn></msub><mo>,</mo><mo>…</mo><mo>,</mo><msub><mi>a</mi><mi>N</mi></msub><mo>)</mo>
+            <mo>−</mo><mi>α</mi><mo>ln</mo><msub><mi>π</mi><mi>i</mi></msub><mo>(</mo><msub><mi>a</mi><mi>i</mi></msub><mo>∣</mo><msub><mi>o</mi><mi>i</mi></msub><mo>)</mo>
+            <mo>]</mo>
+          </math>
+        </div>
+        <ul>
+            <li><strong>α &gt; 0</strong> 是温度系数，控制熵正则化的强度；</li>
+            <li><strong>ln π<sub>i</sub>(a<sub>i</sub> ∣ o<sub>i</sub>)</strong> 是策略 π<sub>i</sub> 的对数概率（熵项）；</li>
+            <li>α 高 → 更偏探索（策略更随机）；α 低 → 更偏利用（策略更确定）。</li>
+        </ul>
 
         <p>MASAC引入<strong>自动温度调节</strong>来避免手动调α的麻烦——算法会自动学习合适的α值，使得策略的熵维持在目标熵附近。这在MAS中尤其重要：不同Agent可能需要不同的探索程度，手动调整N个α参数是不现实的。</p>
 
@@ -126,7 +177,7 @@ J(π_i) = E[ Q_i(s, a_1, ..., a_N)
 
         <h2>6.3 MAPPO：多智能体PPO</h2>
 
-        <p>MAPPO（Multi-Agent PPO）是近年来最引人注目的MARL算法之一。它的核心思想非常直接：<strong>将单Agent PPO直接扩展到多Agent场景</strong>——所有Agent共享一个集中评论家，每个Agent有自己的分散策略网络，用PPO的裁剪目标（Clipped Objective）和GAE（广义优势估计）来优化。</p>
+        <p>MAPPO（Multi-Agent PPO，Yu et al., 2021，<a href="https://arxiv.org/abs/2103.01955">arXiv:2103.01955</a>）是近年来最引人注目的MARL算法之一。它的核心思想非常直接：<strong>将单Agent PPO直接扩展到多Agent场景</strong>——所有Agent共享一个集中评论家，每个Agent有自己的分散策略网络，用PPO的裁剪目标（Clipped Objective）和GAE（广义优势估计）来优化。</p>
 
         <pre><code># MAPPO的损失函数（Python风格伪代码）
 
@@ -345,7 +396,7 @@ def mappo_loss(policy, old_policy, critic, states, actions, rewards, dones):
             <a href="index.html">📖 返回目录</a>
             <a href="07.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
