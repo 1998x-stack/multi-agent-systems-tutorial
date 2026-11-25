@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第17章 智能体免疫系统</title>
     <link rel="stylesheet" href="theme.css">
-</head>
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +47,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第17章 智能体免疫系统</h2>
+        <h1 class="page-title">第17章 智能体免疫系统</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第17章 智能体免疫系统</p>
 
         <p>上一章我们讨论了MAS的安全威胁和防御原则。说实话，那是相当压抑的一章——攻击手段层出不穷，而防御看起来总是慢半拍。每次你堵住了一种攻击方式，攻击者马上发明了新的。这种"猫鼠游戏"让人感觉永无止境。</p>
 
@@ -135,6 +142,33 @@
 │ L0: 输入消毒（Input Sanitization）                       │
 │ 提示净化、上下文过滤、格式验证                           │
 └─────────────────────────────────────────────────────────┘</code></pre>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 440" role="img" aria-labelledby="anisT anisD">
+          <title id="anisT">ANIS 六层免疫塔的防御梯度</title>
+          <desc id="anisD">恶意输入从底部进入，依次经过 L0 输入消毒、L1 记忆完整性、L2 工具调用验证、L3 行为异常检测、L4 多 Agent 共识验证、L5 种群级免疫；层级越高越依赖学习与群体协作，越靠下的层拦截已知、低质量的攻击。</desc>
+          <rect width="820" height="440" fill="#fbfaff"/>
+          <defs><marker id="anisAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker></defs>
+          <g font-family="system-ui, sans-serif">
+          <g fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"><rect x="230" y="60" width="300" height="48" rx="10"/></g>
+          <g fill="#cffafe" stroke="#0891b2" stroke-width="1.6"><rect x="230" y="114" width="300" height="48" rx="10"/></g>
+          <g fill="#dcfce7" stroke="#16a34a" stroke-width="1.6"><rect x="230" y="168" width="300" height="48" rx="10"/></g>
+          <g fill="#fef9c3" stroke="#ca8a04" stroke-width="1.6"><rect x="230" y="222" width="300" height="48" rx="10"/></g>
+          <g fill="#ffedd5" stroke="#ea580c" stroke-width="1.6"><rect x="230" y="276" width="300" height="48" rx="10"/></g>
+          <g fill="#fee2e2" stroke="#dc2626" stroke-width="1.6"><rect x="230" y="330" width="300" height="48" rx="10"/></g>
+          <g fill="#0f172a" font-size="12"><text x="248" y="90">L5 · 种群级免疫</text><text x="248" y="144">L4 · 多 Agent 共识验证</text><text x="248" y="198">L3 · 行为异常检测</text><text x="248" y="252">L2 · 工具调用验证</text><text x="248" y="306">L1 · 记忆完整性</text><text x="248" y="360">L0 · 输入消毒</text></g>
+          <g fill="#475569" font-size="10.5"><text x="546" y="89">跨 Agent 情报共享 · 群体净化</text><text x="546" y="143">多实例交叉验证 · 分歧升级人工</text><text x="546" y="197">行为基线建模 · 实时异常评分</text><text x="546" y="251">参数范围 · 调用频率 · 输出审查</text><text x="546" y="305">写入校验 · 污染检测 · 记忆隔离</text><text x="546" y="359">提示净化 · 内容过滤 · 格式验证</text></g>
+          <line x1="200" y1="384" x2="200" y2="70" stroke="#dc2626" stroke-width="2.2" marker-end="url(#anisAr)"/>
+          <text transform="rotate(-90 200 230)" x="200" y="230" text-anchor="middle" fill="#b91c1c" font-size="11">威胁上行 · 逐层拦截</text>
+          <rect x="40" y="386" width="160" height="36" rx="9" fill="#1e1b4b"/>
+          <text x="120" y="408" text-anchor="middle" fill="#ffffff" font-size="11">恶意输入 / 被污染工具</text>
+          <text x="410" y="428" text-anchor="middle" fill="#6b7280" font-size="10">越往下越靠规则、越能拦住已知低频攻击；越往上越靠学习与群体，代价是延迟与部署成本</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption>ANIS 六层免疫塔的防御梯度：同一个威胁从 L0 向上穿透，每层拦截一类风险。L0↔L2 靠确定性规则与校验，部署简单；L3 起引入学习，L4↔L5 需要多实例与群体协作，拦截能力更强但延迟与成本更高。落地优先级建议从 L0、L2 向上补齐。</figcaption>
+        </figure>
 
         <h3>L0: 输入消毒</h3>
         <p>最基础的防线。所有进入Agent的输入——用户消息、文档内容、工具返回结果——都要经过消毒处理。L0的关键任务包括：</p>
@@ -347,7 +381,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="18.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
