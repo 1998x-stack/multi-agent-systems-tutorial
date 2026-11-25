@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第12章 MetaGPT：软件公司即智能体社会</title>
     <link rel="stylesheet" href="theme.css">
-</head>
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,14 +47,15 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第12章 MetaGPT：软件公司即智能体社会</h2>
+        <h1 class="page-title">第12章 MetaGPT：软件公司即智能体社会</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第12章 MetaGPT：软件公司即智能体社会</p>
 
         <p>写代码这个行业有个有趣的悖论：写代码的AI（GitHub Copilot、Cursor）卖得空前火爆，但你见过哪个写代码的AI能真正<strong>替代一个软件团队</strong>？Copilot帮你写完了一个函数，但还要有人设计架构、写测试、做代码审查、部署上线。一个完整的软件项目，从来不是"把所有函数写完"那么简单。</p>
 
-        <p>这就引出了MetaGPT的核心理念：<strong>既然写代码需要的是一个团队，那我们就创造一个由Agent组成的"软件公司"</strong>。产品经理Agent写需求文档，架构师Agent设计系统，工程师Agent写代码，QA Agent做测试，Reviewer Agent做代码审查——每个Agent扮演真实的角色，每个角色遵循真实世界中的标准操作流程（SOP）。这在2024年的论文中被验证是可行的，而到2026年已经成为一个完整的多Agent框架生态。</p>
+        <p>这就引出了MetaGPT的核心理念：<strong>既然写代码需要的是一个团队，那我们就创造一个由Agent组成的"软件公司"</strong>。产品经理Agent写需求文档，架构师Agent设计系统，工程师Agent写代码，QA Agent做测试，Reviewer Agent做代码审查——每个Agent扮演真实的角色，每个角色遵循真实世界中的标准操作流程（SOP）。这在MetaGPT论文（Hong et al., ICLR 2024，<a href="https://arxiv.org/abs/2308.00352">arXiv:2308.00352</a>）中被验证是可行的，而到2026年已经成为一个完整的多Agent框架生态。</p>
 
         <h2>12.1 SOP设计：把公司流程编码成Agent协议</h2>
 
@@ -110,6 +117,43 @@
         </table>
 
         <p>这五个角色的顺序不是随意的——它精确对应了软件开发流程的"瀑布模型"（是的，那个在人类团队中被诟病但在Agent团队中意外好用的模型）。每个角色的产出格式是固定的结构化文档，后续角色可以精确解析前序角色的输出——这是MetaGPT区别于其他框架的关键设计。</p>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 200" role="img" aria-labelledby="sopT sopD">
+          <title id="sopT">MetaGPT 的瀑布式 SOP 与结构化中间产出</title>
+          <desc id="sopD">五个角色按产品经理、架构师、工程师、QA、审查员顺序接力，每个角色向下产出结构化文档（PRD、Design Doc、代码、测试报告、审查报告），角色之间传递的是文档而非自由对话。</desc>
+          <rect width="820" height="200" fill="#fbfaff"/>
+          <defs><marker id="sopAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker><marker id="sopAr2" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#0d9488"/></marker></defs>
+          <g font-family="system-ui, sans-serif" font-size="11" text-anchor="middle">
+          <g stroke="#7c3aed" stroke-width="1.8" marker-end="url(#sopAr)">
+            <line x1="160" y1="64" x2="190" y2="64"/><line x1="322" y1="64" x2="352" y2="64"/>
+            <line x1="484" y1="64" x2="514" y2="64"/><line x1="646" y1="64" x2="676" y2="64"/>
+          </g>
+          <g fill="#ede9fe" stroke="#7c3aed" stroke-width="1.8">
+            <rect x="30" y="40" width="130" height="48" rx="10"/><rect x="192" y="40" width="130" height="48" rx="10"/>
+            <rect x="354" y="40" width="130" height="48" rx="10"/><rect x="516" y="40" width="130" height="48" rx="10"/>
+            <rect x="678" y="40" width="130" height="48" rx="10"/>
+          </g>
+          <g fill="#4c1d95"><text x="95" y="62" font-size="11">产品经理</text><text x="257" y="62" font-size="11">架构师</text><text x="419" y="62" font-size="11">工程师 ×3</text><text x="581" y="62" font-size="11">QA</text><text x="743" y="62" font-size="11">Reviewer</text></g>
+          <g fill="#6d28d9" font-size="9"><text x="95" y="78">PM</text><text x="257" y="78">Architect</text><text x="419" y="78">并行编码</text><text x="581" y="78">QATester</text><text x="743" y="78">代码审查</text></g>
+          <g stroke="#0d9488" stroke-width="1.6" marker-end="url(#sopAr2)">
+            <line x1="95" y1="88" x2="95" y2="104"/><line x1="257" y1="88" x2="257" y2="104"/>
+            <line x1="419" y1="88" x2="419" y2="104"/><line x1="581" y1="88" x2="581" y2="104"/><line x1="743" y1="88" x2="743" y2="104"/>
+          </g>
+          <g fill="#ccfbf1" stroke="#0d9488" stroke-width="1.5">
+            <rect x="30" y="106" width="130" height="44" rx="9"/><rect x="192" y="106" width="130" height="44" rx="9"/>
+            <rect x="354" y="106" width="130" height="44" rx="9"/><rect x="516" y="106" width="130" height="44" rx="9"/>
+            <rect x="678" y="106" width="130" height="44" rx="9"/>
+          </g>
+          <g fill="#0f766e"><text x="95" y="126" font-size="10">PRD 文档</text><text x="257" y="126" font-size="10">Design Doc</text><text x="419" y="126" font-size="10">代码文件</text><text x="581" y="126" font-size="10">测试报告</text><text x="743" y="126" font-size="10">审查报告</text></g>
+          <g fill="#134e4a" font-size="8"><text x="95" y="141">结构化需求</text><text x="257" y="141">数据结构/API/模块</text><text x="419" y="141">按模块组织</text><text x="581" y="141">结果+覆盖率</text><text x="743" y="141">评分+建议</text></g>
+          <text x="410" y="180" fill="#6b7280" font-size="10">纵向箭头 = 结构化产出文档（可解析、可校验）；横向箭头 = 角色接力。传递的是文档，不是自由对话。</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption>MetaGPT 的“软件公司”流水线：五个角色按 SOP 接力，每个角色向下产出一份结构化文档，横向传给下一角色。因为相邻环节交换的是有 Schema 的文档而非自由对话，关键决策能被精确解析、追溯和独立校验——这是它减少多 Agent 信息损失的根因。</figcaption>
+        </figure>
 
         <h2>12.3 结构化中间产出：为什么比对话强？</h2>
 
@@ -278,7 +322,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="13.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
