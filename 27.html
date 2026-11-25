@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第27章 Agent互联网与开放生态</title>
     <link rel="stylesheet" href="theme.css">
-</head>
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +47,11 @@
             <li><a href="27.html" class="active">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第27章 Agent互联网与开放生态</h2>
+        <h1 class="page-title">第27章 Agent互联网与开放生态</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第27章 Agent互联网与开放生态</p>
 
         <p>欢迎来到全书的倒数第二章！上一章我们讨论了Agent在物理世界的协作——具身集体智能。如果说"具身智能"回答的是Agent和人、物理世界的关系，那这一章我们要回答一个更加宏大、也更激动人心的问题：<strong>Agent和Agent之间如何在一个开放的、跨组织的生态中互联互通？</strong></p>
 
@@ -106,6 +113,36 @@
                 </tr>
             </tbody>
         </table>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 380" role="img" aria-labelledby="stkT stkD">
+          <title id="stkT">Agent 互联网五层协议栈</title>
+          <desc id="stkD">自上而下：应用层承载业务 Agent；其下发现层 ANP、协作层 A2A、工具层 MCP 并列；再往下是传输层 AGTP 与实时层 MOQT；最底层为物理网络层。右侧标注各层对互联网协议的类比。</desc>
+          <rect width="820" height="380" fill="#fbfaff"/>
+          <defs><marker id="stkAr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#64748b"/></marker></defs>
+          <g font-family="system-ui, sans-serif">
+          <g stroke="#64748b" stroke-width="1.6" marker-end="url(#stkAr)"><line x1="380" y1="76" x2="380" y2="99"/><line x1="380" y1="228" x2="380" y2="255"/></g>
+          <rect x="170" y="30" width="420" height="46" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.6"/>
+          <text x="188" y="58" fill="#78350f" font-size="12">应用层 · 业务 Agent（采购 / 客服 / 分析 …）</text>
+          <rect x="170" y="100" width="420" height="38" rx="9" fill="#dbeafe" stroke="#2563eb" stroke-width="1.6"/>
+          <text x="188" y="124" fill="#1e3a8a" font-size="12">发现层 · ANP — 注册 / 发现 / 身份</text>
+          <rect x="170" y="145" width="420" height="38" rx="9" fill="#dcfce7" stroke="#16a34a" stroke-width="1.6"/>
+          <text x="188" y="169" fill="#14532d" font-size="12">协作层 · A2A — 任务 / 协商 / 能力声明</text>
+          <rect x="170" y="190" width="420" height="38" rx="9" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.6"/>
+          <text x="188" y="214" fill="#4c1d95" font-size="12">工具层 · MCP — 工具调用 / 数据访问</text>
+          <rect x="170" y="256" width="420" height="38" rx="9" fill="#cffafe" stroke="#0891b2" stroke-width="1.6"/>
+          <text x="188" y="280" fill="#164e63" font-size="12">传输层 · AGTP — 可靠消息 / 流控 / 路由</text>
+          <rect x="170" y="301" width="420" height="38" rx="9" fill="#fce7f3" stroke="#db2777" stroke-width="1.6"/>
+          <text x="188" y="325" fill="#831843" font-size="12">实时层 · MOQT — 音视频 / 实时数据流</text>
+          <rect x="170" y="352" width="420" height="28" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="1.4"/>
+          <text x="380" y="371" fill="#334155" font-size="11" text-anchor="middle">物理网络层（TCP/IP, QUIC …）</text>
+          <g fill="#6b7280" font-size="11"><text x="606" y="57">业务场景</text><text x="606" y="123">≈ DNS</text><text x="606" y="168">≈ HTTP</text><text x="606" y="213">≈ USB 驱动</text><text x="606" y="279">≈ TCP/IP</text><text x="606" y="324">≈ WebRTC</text></g>
+          </g>
+        </svg>
+        </div>
+        <figcaption>Agent 互联网的五层协议栈：顶层是业务 Agent，中间三层的发现（ANP）、协作（A2A）、工具（MCP）各管一事，下层由 AGTP 负责可靠消息、MOQT 负责实时流，再落到物理网络。层与层之间用标准接口解耦，右侧给出与互联网协议的类比。</figcaption>
+        </figure>
 
         <p>这个五层协议栈不是由某一家公司设计的顶层架构，而是过去两年行业实践中"涌现"出来的结构。每层解决一个特定的问题，层与层之间通过标准接口解耦。这种分层方式的好处是——底层协议的演进不会影响上层应用，反之亦然。</p>
 
@@ -409,7 +446,7 @@ message MediaFrame {
             <a href="index.html">📖 返回目录</a>
             <a href="28.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
