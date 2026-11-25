@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第4章 智能体间的博弈论基础</title>
     <link rel="stylesheet" href="theme.css">
-</head>
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +48,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第4章 智能体间的博弈论基础</h2>
+        <h1 class="page-title">第4章 智能体间的博弈论基础</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第4章 智能体间的博弈论基础</p>
 
         <p>想象这样一个场景：你设计了一个由两个LLM Agent组成的客服系统——AgentA负责售前咨询，AgentB负责售后支持。这两个Agent虽然各司其职，但共享同一个知识库，也都可以访问用户的订单数据。有一天，一个用户同时向两个Agent询问："我这个订单需要退货，但我不确定该不该退。"这时候两个Agent面临一个抉择：是各自独立给出建议，还是先沟通再回应？如果AgentA为了"多成单"而劝用户不要退货，而AgentB为了"用户满意度"而建议退货，它们的利益就冲突了。</p>
 
@@ -136,16 +144,23 @@
 
         <h3>4.3.1 纳什均衡</h3>
 
-        <p><strong>纳什均衡（Nash Equilibrium）</strong>是博弈论中最核心的概念。一个策略组合 (π<sub>1</sub>*, π<sub>2</sub>*, ..., π<sub>N</sub>*) 是纳什均衡，如果没有任何一个Agent可以通过单方面改变自己的策略来获得更高的收益。用数学语言说：</p>
+        <p><strong>纳什均衡（Nash Equilibrium）</strong>（Nash, 1950，<a href="https://doi.org/10.1073/pnas.36.1.48">doi:10.1073/pnas.36.1.48</a>）是博弈论中最核心的概念。一个策略组合 (π<sub>1</sub>*, π<sub>2</sub>*, ..., π<sub>N</sub>*) 是纳什均衡，如果没有任何一个Agent可以通过单方面改变自己的策略来获得更高的收益。用数学语言说：</p>
 
-        <pre><code>∀i, ∀π_i:  V_i(π_i*, π_{-i}*) >= V_i(π_i, π_{-i}*)
-
-其中：
-- π_i* 是Agent i的均衡策略
-- π_{-i}* 是所有其他Agent的均衡策略组合
-- V_i 是Agent i的期望总收益
-
-直观理解：在纳什均衡下，"没人想单方面改变自己的策略"。</code></pre>
+        <div class="math-scroll" tabindex="0" role="region" aria-label="纳什均衡的定义">
+          <math display="block" aria-label="纳什均衡：对所有 Agent i 和任意策略 pi_i，均衡收益不低于单方面偏离的收益">
+            <mo>∀</mo><mi>i</mi><mo>,</mo><mspace width="0.4em"/>
+            <mo>∀</mo><msub><mi>π</mi><mi>i</mi></msub><mo>:</mo><mspace width="0.4em"/>
+            <msub><mi>V</mi><mi>i</mi></msub><mo>(</mo><msubsup><mi>π</mi><mi>i</mi><mo>*</mo></msubsup><mo>,</mo><msubsup><mi>π</mi><mrow><mo>−</mo><mi>i</mi></mrow><mo>*</mo></msubsup><mo>)</mo>
+            <mo>≥</mo>
+            <msub><mi>V</mi><mi>i</mi></msub><mo>(</mo><msub><mi>π</mi><mi>i</mi></msub><mo>,</mo><msubsup><mi>π</mi><mrow><mo>−</mo><mi>i</mi></mrow><mo>*</mo></msubsup><mo>)</mo>
+          </math>
+        </div>
+        <ul>
+            <li><strong>π<sub>i</sub>*</strong> 是 Agent i 的均衡策略；</li>
+            <li><strong>π<sub>−i</sub>*</strong> 是所有其他 Agent 的均衡策略组合；</li>
+            <li><strong>V<sub>i</sub></strong> 是 Agent i 的期望总收益。</li>
+        </ul>
+        <p>直观理解：在纳什均衡下，“没人想单方面改变自己的策略”。</p>
 
         <p>纳什均衡的重要性在于：它给出了MAS中策略的<strong>稳定点</strong>。如果一个MAS收敛到了纳什均衡，那么所有Agent都没有动机去改变当前策略——系统是稳定的。但纳什均衡有以下局限：</p>
         <ul>
@@ -171,6 +186,28 @@
         <p>社会困境（Social Dilemmas）是指一类特殊博弈——个体理性与集体理性发生冲突的场景。每个Agent追求自身利益最大化的行为，导致了整体利益的损失。理解社会困境对MAS设计至关重要，因为很多MAS失败的根本原因就是陷入了社会困境。</p>
 
         <p><strong>囚徒困境：</strong> 两个嫌疑犯被捕，被分开审讯。如果双方都不揭发（合作），各判1年；如果一方揭发而另一方沉默，揭发者无罪释放，沉默者判10年；如果双方都揭发（背叛），各判5年。从个体理性出发，无论对方做什么，背叛都是最优策略——因为背叛的收益总是更高。但当双方都背叛时，结果（各5年）反而不如双方都合作（各1年）。囚徒困境在MAS中的典型表现：两个Agent共享同一资源时，各自过度攫取导致资源耗竭。</p>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 340" role="img" aria-labelledby="pdT pdD">
+          <title id="pdT">囚徒困境的收益矩阵与纳什均衡</title>
+          <desc id="pdD">两行两列收益矩阵：行是 Agent A 的选择（合作/背叛），列是 Agent B 的选择。双方合作各得 3；一方背叛可得 5、对方得 0；双方都背叛各得 1。右下角（背叛, 背叛）是纳什均衡，但总收益低于（合作, 合作）。</desc>
+          <rect width="820" height="340" fill="#fbfaff"/>
+          <g font-family="system-ui, sans-serif" text-anchor="middle">
+          <g fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.6"><rect x="250" y="90" width="170" height="110"/><rect x="420" y="90" width="170" height="110"/><rect x="250" y="200" width="170" height="110"/></g>
+          <rect x="420" y="200" width="170" height="110" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+          <g fill="#1e293b" font-size="14"><text x="335" y="150">A:3 / B:3</text><text x="505" y="150">A:0 / B:5</text><text x="335" y="260">A:5 / B:0</text></g>
+          <text x="505" y="260" fill="#b91c1c" font-size="14">A:1 / B:1</text>
+          <text x="505" y="282" fill="#b91c1c" font-size="10">纳什均衡</text>
+          <g fill="#4c1d95" font-size="13"><text x="335" y="76">B：合作</text><text x="505" y="76">B：背叛</text></g>
+          <g fill="#4c1d95" font-size="13" text-anchor="end"><text x="240" y="150">A：合作</text><text x="240" y="260">A：背叛</text></g>
+          <text x="410" y="44" fill="#4c1d95" font-size="13">囚徒困境：两个 Agent 的支付矩阵</text>
+          <text x="410" y="325" fill="#6b7280" font-size="10">每格：左=A 得分，右=B 得分（经典囚徒困境收益，教学示意）。从个体理性看背叛总是更优，但（合作, 合作）的集体收益更高</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption>囚徒困境的收益矩阵：无论 B 选什么，A 选“背叛”的收益都更高，因此（背叛, 背叛）是唯一的纳什均衡；但双方合作时各自收益更高，即纳什均衡并非帕累托最优。这正是很多 MAS 陷入“个体理性→集体更差”的根源。</figcaption>
+        </figure>
 
         <p><strong>公共品博弈：</strong> N个Agent每人有一定初始资金，可以选择向公共池中投入多少。公共池中的资金乘以一个倍数后平均分配给所有Agent。最优的社会结果是所有人全额投入，但个体理性是"零投入"——因为不管投多少，分配收益都是一样的。<strong>搭便车</strong>（Free-Riding）因此产生。在MAS中，公共品博弈对应"共享知识库更新"、"公共数据库维护"等场景——每个人都可以往知识库添加内容，但添加内容需要付出努力，而收益却被所有人共享。</p>
 
@@ -235,7 +272,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="05.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
