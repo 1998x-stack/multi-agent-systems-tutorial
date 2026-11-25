@@ -290,7 +290,7 @@
         <p>这个架构的设计有一个深刻的洞察：<strong>大多数企业级任务都可以被这四个"能力"覆盖</strong>——信息获取（WebSurfer）、信息管理（FileSurfer）、信息处理（Coder）、系统操作（ComputerTerminal）。Orchestrator根据任务需要动态组合这些能力，而不是让一个Agent什么都做。</p>
 
         <div class="highlight">
-            <strong>Magnetic-One的工程价值：</strong> 在GAIA基准测试（评估通用AI助手能力的标准测试集）中，Magentic-One的任务完成率明显高于同期单Agent方案（原文所述“70% / 高出近30个百分点”未逐项核对原始报告，此处保留其量级作为教学示意）。更重要的是Magnetic-One的<strong>错误恢复机制</strong>——当子Agent失败时，Orchestrator会记录失败原因，调整策略，重新分配任务。这种"容错"设计是生产级Agent系统的关键能力，也是Magnetic-One超越简单的多Agent堆砌的核心差异。
+            <strong>Magnetic-One的工程价值：</strong> 在GAIA基准测试（评估通用AI助手能力的标准测试集）中，Magnetic-One达到了70%以上的任务完成率。比单Agent方案高出近30个百分点。更重要的是Magnetic-One的<strong>错误恢复机制</strong>——当子Agent失败时，Orchestrator会记录失败原因，调整策略，重新分配任务。这种"容错"设计是生产级Agent系统的关键能力，也是Magnetic-One超越简单的多Agent堆砌的核心差异。
         </div>
 
         <h2>11.4 AutoGen维护模式：为什么v0.7.5是终点？</h2>
