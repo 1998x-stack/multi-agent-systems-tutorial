@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第24章 CrewAI实战：构建内容生产Pipeline</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第24章 CrewAI实战：构建内容生产Pipeline</h2>
+        <h1 class="page-title">第24章 CrewAI实战：构建内容生产Pipeline</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第24章 CrewAI实战：构建内容生产Pipeline</p>
 
         <p>上一章我们通过LangGraph构建了一个精确控制的分流客服系统——每一步的流转都在我们的掌控之中。但实际工作中还有另一类场景：你不需要精确控制"谁下一步做什么"，而是想定义一组<strong>角色</strong>，让它们像人类团队一样自主协作。这就是CrewAI的强项。</p>
 
@@ -85,6 +97,46 @@
        ▼
     最终报告
 </code></pre>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 260" role="img" aria-labelledby="cwT cwD">
+          <title id="cwT">CrewAI 顺序执行的三角色研究报告 Pipeline</title>
+          <desc id="cwD">技术主题作为输入，依次经过 Researcher、Analyst、Writer、Reviewer 四个角色，每个角色的输出作为下一个任务的上文，最终产出结构化研究报告。</desc>
+          <rect width="820" height="260" fill="#fbfaff"/>
+          <text x="410" y="30" font-size="13" text-anchor="middle" fill="#6d28d9">输入：技术主题 → 每个任务的输出作为下一个任务的上下文（Process.sequential）</text>
+          <g font-size="13" text-anchor="middle">
+            <rect x="20" y="70" width="170" height="90" rx="10" fill="#ccfbf1" stroke="#0f766e"/>
+            <text x="105" y="102" fill="#0f766e">Researcher</text>
+            <text x="105" y="124" font-size="11" fill="#0f766e">搜索 + 整理</text>
+            <text x="105" y="142" font-size="11" fill="#0f766e">→ 结构化笔记</text>
+            <rect x="225" y="70" width="170" height="90" rx="10" fill="#ccfbf1" stroke="#0f766e"/>
+            <text x="310" y="102" fill="#0f766e">Analyst</text>
+            <text x="310" y="124" font-size="11" fill="#0f766e">分析 + 提取洞察</text>
+            <text x="310" y="142" font-size="11" fill="#0f766e">→ 分析报告</text>
+            <rect x="430" y="70" width="170" height="90" rx="10" fill="#ede9fe" stroke="#7c3aed"/>
+            <text x="515" y="102" fill="#4c1d95">Writer</text>
+            <text x="515" y="124" font-size="11" fill="#6d28d9">结构化写作</text>
+            <text x="515" y="142" font-size="11" fill="#6d28d9">→ 初版报告</text>
+            <rect x="635" y="70" width="170" height="90" rx="10" fill="#fef3c7" stroke="#b45309"/>
+            <text x="720" y="102" fill="#92400e">Reviewer</text>
+            <text x="720" y="124" font-size="11" fill="#92400e">核查 + 修正</text>
+            <text x="720" y="142" font-size="11" fill="#92400e">→ 最终版</text>
+          </g>
+          <line x1="190" y1="115" x2="221" y2="115" stroke="#0f766e" stroke-width="2" marker-end="url(#cwa)"/>
+          <line x1="395" y1="115" x2="426" y2="115" stroke="#0f766e" stroke-width="2" marker-end="url(#cwa)"/>
+          <line x1="600" y1="115" x2="631" y2="115" stroke="#7c3aed" stroke-width="2" marker-end="url(#cwb)"/>
+          <line x1="720" y1="160" x2="720" y2="205" stroke="#b45309" stroke-width="2" marker-end="url(#cwc)"/>
+          <text x="720" y="228" font-size="13" text-anchor="middle" fill="#92400e">最终研究报告</text>
+          <defs>
+            <marker id="cwa" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0f766e"/></marker>
+            <marker id="cwb" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+            <marker id="cwc" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b45309"/></marker>
+          </defs>
+        </svg>
+        </div>
+        <figcaption>顺序执行（<code>Process.sequential</code>）的四个角色：Researcher 先搜与整理，Analyst 在其笔记上做分析与洞察，Writer 把分析写成报告，Reviewer 做事实核查与格式修正。每一环的输出都作为下一环的上文，因此上游质量会沿着链条逐级放大。角色与顺序依据本章 24.1–24.4。</figcaption>
+        </figure>
 
         <p>每个阶段的输出作为下一阶段的输入上下文。但不同于LangGraph的严格图结构，CrewAI中每个Agent是"自主"的——它拿到任务描述和上下文后，自行决定如何完成。如果Researcher觉得自己需要更多时间搜索，它可以"思考更久"（这由LLM的推理能力决定）。</p>
 
@@ -573,7 +625,7 @@ if __name__ == "__main__":
             <a href="index.html">📖 返回目录</a>
             <a href="25.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
