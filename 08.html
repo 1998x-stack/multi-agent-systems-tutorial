@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第8章 LLM智能体的崛起</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第8章 LLM智能体的崛起</h2>
+        <h1 class="page-title">第8章 LLM智能体的崛起</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第8章 LLM智能体的崛起</p>
 
         <p>如果你2022年底问一个AI研究员"你的Agent跑得怎么样"，对方大概率在说某个强化学习的Game Agent。但如果你2026年问同样的问题，答案完全不同——几乎所有人都在讨论<strong>LLM Agent</strong>。这场转变之迅猛，在AI历史上都算得上罕见。从GPT-3的"文本生成玩具"到能自主完成复杂任务的智能体，LLM在不到五年时间里完成了从"大脑"到"行动者"的跃迁。</p>
 
@@ -148,6 +160,32 @@
         <p><strong>第二，Agent的自我纠错成为可能。</strong> 推理链中的任何一步，模型都可以回溯、质疑、修正。这对多步Agent任务至关重要——如果一个Agent在第五步发现前面的假设有问题，它可以及时纠正而不是将错就错。</p>
 
         <p><strong>第三，Agent的决策可追溯性大幅提升。</strong> 内部推理链虽然不向用户暴露，但对开发者来说，可以通过API输出看到模型的思考过程，大大提升了调试的透明度。</p>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 360" role="img" aria-labelledby="itsT itsD">
+          <title id="itsT">Inference-Time Scaling：准确率随推理 token 增长而上升</title>
+          <desc id="itsD">示意图：固定基座模型下，增加推理时思考 token 数，数学与编程任务准确率呈上升并逐渐饱和的趋势；传统单次生成相当于最左侧的低 token 起点。</desc>
+          <rect width="820" height="360" fill="#fbfaff"/>
+          <text x="90" y="30" font-size="16" font-weight="700" fill="#4c1d95">推理时计算量 ↑ → 任务准确率 ↑（教学示意）</text>
+          <line x1="90" y1="50" x2="90" y2="300" stroke="#94a3b8" stroke-width="1.5"/>
+          <line x1="90" y1="300" x2="780" y2="300" stroke="#94a3b8" stroke-width="1.5"/>
+          <text x="100" y="322" font-size="12" fill="#64748b">单次生成</text>
+          <text x="360" y="322" font-size="12" fill="#64748b">短思考链</text>
+          <text x="660" y="322" font-size="12" fill="#64748b">长思考链 →</text>
+          <text x="30" y="55" font-size="12" fill="#64748b">高</text>
+          <text x="30" y="305" font-size="12" fill="#64748b">低</text>
+          <text x="40" y="180" font-size="12" fill="#64748b">准确率</text>
+          <polyline fill="none" stroke="#7c3aed" stroke-width="3" points="90,270 170,230 260,188 360,150 470,118 580,96 690,82 780,74"/>
+          <circle cx="90" cy="270" r="5" fill="#ef4444"/>
+          <text x="110" y="265" font-size="12" fill="#b91c1c">传统单次 CoT</text>
+          <circle cx="470" cy="118" r="5" fill="#0f766e"/>
+          <text x="400" y="108" font-size="12" fill="#0f766e">拐点区</text>
+          <line x1="470" y1="118" x2="470" y2="300" stroke="#99f6e4" stroke-dasharray="4 4"/>
+        </svg>
+        </div>
+        <figcaption>Inference-Time Scaling 的直觉曲线：同一个基座模型，把"思考"展开成更多推理 token，数学/编程等高难度任务的准确率随之上升，但会逐渐饱和（收益递减）。本图是概念示意，横轴刻度未标具体 token 量；o1、DeepSeek R1 等系统的实测增益请以其官方技术报告为准。</figcaption>
+        </figure>
 
         <h2>8.3 从ReAct到原生工具使用</h2>
 
@@ -376,7 +414,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="09.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
