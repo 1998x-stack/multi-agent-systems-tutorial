@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第23章 LangGraph实战：构建多智能体应用</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第23章 LangGraph实战：构建多智能体应用</h2>
+        <h1 class="page-title">第23章 LangGraph实战：构建多智能体应用</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第23章 LangGraph实战：构建多智能体应用</p>
 
         <p>欢迎来到实战周！如果你一路从第9章学过来，那么你对LangGraph的理论基础——StateGraph、节点、边、条件路由——已经有了扎实的理解。但理论和实战之间有一条鸿沟：你真的能在真实场景中把LangGraph用起来吗？</p>
 
@@ -79,6 +91,45 @@
 </code></pre>
 
         <p>注意一个关键设计：聚合节点不只是"拼接回复"，它需要判断用户是否满意。如果用户对某个Agent的回复不满意（比如用户说"你根本没回答我的问题"），系统应该重新路由到另一个Agent或进入人工客服通道。</p>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 340" role="img" aria-labelledby="lgT lgD">
+          <title id="lgT">智能客服分流系统的 LangGraph 状态图</title>
+          <desc id="lgD">用户输入先进入 Classifier 节点判定意图，条件路由把请求分派给 Technical、Billing 或 General 三个专业 Agent 之一；三者输出汇入 Aggregator 生成最终回复；若判定用户不满意，则沿虚线重路由回 Classifier。</desc>
+          <rect width="820" height="340" fill="#fbfaff"/>
+          <rect x="310" y="20" width="200" height="46" rx="10" fill="#ede9fe" stroke="#7c3aed"/>
+          <text x="410" y="42" font-size="14" text-anchor="middle" fill="#4c1d95">Classifier 意图分类</text>
+          <text x="410" y="58" font-size="12" text-anchor="middle" fill="#6d28d9">intent: technical / billing / general</text>
+          <g font-size="13" text-anchor="middle">
+            <rect x="40" y="150" width="200" height="50" rx="10" fill="#ccfbf1" stroke="#0f766e"/>
+            <text x="140" y="180" fill="#0f766e">TechnicalAgent</text>
+            <rect x="310" y="150" width="200" height="50" rx="10" fill="#ccfbf1" stroke="#0f766e"/>
+            <text x="410" y="180" fill="#0f766e">BillingAgent</text>
+            <rect x="580" y="150" width="200" height="50" rx="10" fill="#ccfbf1" stroke="#0f766e"/>
+            <text x="680" y="180" fill="#0f766e">GeneralAgent</text>
+          </g>
+          <text x="410" y="112" font-size="12" text-anchor="middle" fill="#92400e">条件路由（按 intent 选择一条边）</text>
+          <line x1="410" y1="66" x2="150" y2="146" stroke="#7c3aed" stroke-width="2" marker-end="url(#lga)"/>
+          <line x1="410" y1="66" x2="410" y2="146" stroke="#7c3aed" stroke-width="2" marker-end="url(#lga)"/>
+          <line x1="410" y1="66" x2="670" y2="146" stroke="#7c3aed" stroke-width="2" marker-end="url(#lga)"/>
+          <line x1="140" y1="200" x2="380" y2="262" stroke="#0f766e" stroke-width="2" marker-end="url(#lgb)"/>
+          <line x1="410" y1="200" x2="410" y2="262" stroke="#0f766e" stroke-width="2" marker-end="url(#lgb)"/>
+          <line x1="680" y1="200" x2="440" y2="262" stroke="#0f766e" stroke-width="2" marker-end="url(#lgb)"/>
+          <rect x="310" y="264" width="200" height="46" rx="10" fill="#fef3c7" stroke="#b45309"/>
+          <text x="410" y="286" font-size="14" text-anchor="middle" fill="#92400e">Aggregator 汇总</text>
+          <text x="410" y="302" font-size="12" text-anchor="middle" fill="#92400e">判断满意 / 是否升级</text>
+          <path d="M310 287 L20 287 L20 43 L306 43" fill="none" stroke="#b91c1c" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#lgc)"/>
+          <text x="16" y="170" font-size="12" fill="#b91c1c" transform="rotate(-90 16 170)">不满意 → 重路由（reroute_count + 1）</text>
+          <defs>
+            <marker id="lga" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+            <marker id="lgb" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0f766e"/></marker>
+            <marker id="lgc" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b91c1c"/></marker>
+          </defs>
+        </svg>
+        </div>
+        <figcaption>客服分流系统的状态图：Classifier 先做意图分类，条件路由把请求分派给三个专业 Agent 之一（每次只走一条边），三者输出由 Aggregator 汇总成最终回复；当聚合节点判定用户不满意时，沿虚线回到 Classifier 重新路由，<code>reroute_count</code> 自增以防死循环。结构依据本章 23.1–23.4 的实现。</figcaption>
+        </figure>
 
         <h2>23.2 State设计</h2>
 
@@ -584,7 +635,7 @@ if __name__ == "__main__":
             <a href="index.html">📖 返回目录</a>
             <a href="24.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
