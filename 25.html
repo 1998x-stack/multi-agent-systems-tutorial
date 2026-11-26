@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第25章 多智能体系统调优与评估</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第25章 多智能体系统调优与评估</h2>
+        <h1 class="page-title">第25章 多智能体系统调优与评估</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第25章 多智能体系统调优与评估</p>
 
         <p>如果你已经跟着前面的章节完成了两个实战项目，你现在的状态大概是：系统能跑了，但心里没底。响应时长有时3秒，有时30秒；Token消耗忽高忽低；输出质量——老实说，你感觉最好的版本和最差的版本差距能有一倍。这是每个MAS开发者都会经历的阶段。</p>
 
@@ -127,12 +139,41 @@ from langgraph.graph import StateGraph
             </tbody>
         </table>
 
-        <p>从这个表格可以立刻看出三个关键事实：</p>
-        <ul>
+        <p>从这个表格可以立刻看出三个关键事实：</p>        <ul>
             <li><strong>Technical和Billing两个Agent消耗了72%的Token</strong>——优化这两个Agent的System Prompt能产生最大的杠杆效应</li>
             <li><strong>Prompt Token是Completion Token的5倍以上</strong>——说明上下文重复传递是成本大头，共享前缀缓存的价值巨大</li>
             <li><strong>Classifier只占5%</strong>——用gpt-4o-mini（小而快的模型）处理分类是正确选择</li>
         </ul>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 260" role="img" aria-labelledby="tkT tkD">
+          <title id="tkT">一次客服会话的 Token 消耗分布（按节点）</title>
+          <desc id="tkD">五个节点的总 Token 数：Classifier 1,325（5%）、TechnicalAgent 10,150（38%）、BillingAgent 9,100（34%）、GeneralAgent 4,340（16%）、Aggregator 1,880（7%）；Technical 与 Billing 合计约占 72%。</desc>
+          <rect width="820" height="260" fill="#fbfaff"/>
+          <text x="140" y="28" font-size="13" fill="#6d28d9">总 Token 26,795 的分布（柱长按总 Token 数等比缩放）</text>
+          <g font-size="12">
+            <text x="132" y="67" text-anchor="end" fill="#334155">Classifier</text>
+            <rect x="140" y="52" width="63" height="22" rx="3" fill="#5eead4" stroke="#0f766e"/>
+            <text x="211" y="68" fill="#0f766e">1,325 · 5%</text>
+            <text x="132" y="102" text-anchor="end" fill="#92400e">TechnicalAgent</text>
+            <rect x="140" y="87" width="480" height="22" rx="3" fill="#f59e0b" stroke="#b45309"/>
+            <text x="628" y="103" fill="#92400e">10,150 · 38%</text>
+            <text x="132" y="137" text-anchor="end" fill="#92400e">BillingAgent</text>
+            <rect x="140" y="122" width="430" height="22" rx="3" fill="#f59e0b" stroke="#b45309"/>
+            <text x="578" y="138" fill="#92400e">9,100 · 34%</text>
+            <text x="132" y="172" text-anchor="end" fill="#334155">GeneralAgent</text>
+            <rect x="140" y="157" width="205" height="22" rx="3" fill="#5eead4" stroke="#0f766e"/>
+            <text x="353" y="173" fill="#0f766e">4,340 · 16%</text>
+            <text x="132" y="207" text-anchor="end" fill="#334155">Aggregator</text>
+            <rect x="140" y="192" width="89" height="22" rx="3" fill="#5eead4" stroke="#0f766e"/>
+            <text x="237" y="208" fill="#0f766e">1,880 · 7%</text>
+          </g>
+          <text x="140" y="240" font-size="12" fill="#92400e">橙色（Technical + Billing）= 优化杠杆最大的两个节点，合计约 72%</text>
+        </svg>
+        </div>
+        <figcaption>把本节 LangSmith Trace 示例里的总 Token 数画成柱形：TechnicalAgent 与 BillingAgent 两个节点就吃掉了约 72% 的预算，因此优化它们的 System Prompt（减少重复上下文）收益最大；Classifier 只占 5%，适合用小模型。数值取自本节 25.1.1 的追踪表格，为教学示例而非实测基准。</figcaption>
+        </figure>
 
         <div class="highlight">
             <strong>关键指标：</strong> 在MAS中，有一个指标比"总Token数"更有意义——<strong>有效Token比</strong>（Effective Token Ratio），即每个Agent输出中真正被下游使用的Token占比。如果你发现某个Agent产出了3000 Token，但下游只用到了其中200 Token，那这个Agent的Prompt设计可能过度冗余了。我们团队的目标是将有效Token比维持在60%以上。
@@ -485,7 +526,7 @@ Step 5: 文档化
             <a href="index.html">📖 返回目录</a>
             <a href="26.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
