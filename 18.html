@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第18章 生产级多智能体系统</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第18章 生产级多智能体系统</h2>
+        <h1 class="page-title">第18章 生产级多智能体系统</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第18章 生产级多智能体系统</p>
 
         <p>到目前为止，我们已经讲了协议（MCP、A2A）、安全（攻防、免疫系统），可以说多智能体系统的"基础设施层"已经覆盖得差不多了。但是，如果你现在去搭建一个生产级MAS，你会发现还缺一个关键拼图：<strong>工程化</strong>。</p>
 
@@ -126,6 +138,44 @@
               └── 半开 (HALF_OPEN)
                   ├── 测试请求成功 → CLOSED
                   └── 测试请求失败 → OPEN（重置等待计时器）</code></pre>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 300" role="img" aria-labelledby="cbT cbD">
+          <title id="cbT">Agent 熔断器的三态转换（CLOSED / OPEN / HALF_OPEN）</title>
+          <desc id="cbD">CLOSED 正常转发；错误率超过阈值后转入 OPEN 快速失败；OPEN 等待一段时间后进入 HALF_OPEN 试探；试探成功回到 CLOSED，试探失败回到 OPEN。</desc>
+          <rect width="820" height="300" fill="#fbfaff"/>
+          <g font-size="14" text-anchor="middle">
+            <rect x="40" y="50" width="160" height="52" rx="12" fill="#ccfbf1" stroke="#0f766e"/><text x="120" y="82" fill="#0f766e">CLOSED（正常）</text>
+            <rect x="330" y="50" width="160" height="52" rx="12" fill="#fee2e2" stroke="#b91c1c"/><text x="410" y="82" fill="#b91c1c">OPEN（断开）</text>
+            <rect x="620" y="50" width="160" height="52" rx="12" fill="#fef3c7" stroke="#b45309"/><text x="700" y="82" fill="#92400e">HALF_OPEN（半开）</text>
+          </g>
+          <g fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#cba)">
+            <line x1="200" y1="66" x2="326" y2="66"/>
+          </g>
+          <text x="263" y="58" font-size="11" text-anchor="middle" fill="#b91c1c">错误率 &gt; 50%</text>
+          <g fill="none" stroke="#b45309" stroke-width="2" marker-end="url(#cbb)">
+            <line x1="490" y1="66" x2="616" y2="66"/>
+          </g>
+          <text x="553" y="58" font-size="11" text-anchor="middle" fill="#92400e">等待 30s</text>
+          <g fill="none" stroke="#0f766e" stroke-width="2" marker-end="url(#cbc)">
+            <path d="M700 102 L700 200 L120 200 L120 106"/>
+          </g>
+          <text x="410" y="195" font-size="11" text-anchor="middle" fill="#0f766e">试探成功 → CLOSED</text>
+          <g fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#cba)">
+            <path d="M620 88 L560 88 L560 150 L440 150 L440 106"/>
+          </g>
+          <text x="540" y="145" font-size="11" text-anchor="middle" fill="#b91c1c">试探失败，重置计时</text>
+          <text x="410" y="250" font-size="12" text-anchor="middle" fill="#64748b">状态与转换条件依据本节所述：CLOSED → OPEN 需错误率超阈且最近请求数足够，OPEN → HALF_OPEN 需等待超时。</text>
+          <defs>
+            <marker id="cba" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b91c1c"/></marker>
+            <marker id="cbb" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b45309"/></marker>
+            <marker id="cbc" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0f766e"/></marker>
+          </defs>
+        </svg>
+        </div>
+        <figcaption>熔断器把「单个 Agent 摍落」与「整个系统」隔离开：正常时 CLOSED 转发请求，故障累积到阈值就 OPEN 快速失败并返回降级响应，等待一段时间后用 HALF_OPEN 发起试探性请求决定恢复还是继续断开。阈值（如错误率 50%、最近 10 次请求、等待 30 秒）为本章示例参数，可按业务调整。</figcaption>
+        </figure>
 
         <h3>18.2.2 超时熔断</h3>
         <p>Agent调用LLM的延迟是不可预测的，特别是当模型需要多步推理（Inference-Time Scaling）时。一个复杂的推理任务可能需要几秒到几十秒。因此，为每类Agent调用设置合理的超时时间非常关键。</p>
@@ -345,7 +395,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="19.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
