@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第28章 综合项目：构建自进化研发助手MAS</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html" class="active">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第28章 综合项目：构建自进化研发助手MAS</h2>
+        <h1 class="page-title">第28章 综合项目：构建自进化研发助手MAS</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第28章 综合项目：构建自进化研发助手MAS</p>
 
         <p>终于到了最后一章。如果你一路学到这里，恭喜你——你不仅理解了多智能体系统的理论基础，还掌握了LangGraph、CrewAI、AutoGen等主流框架，了解了MCP/A2A协议和安全架构。现在是时候把这一切<strong>融会贯通</strong>了。</p>
 
@@ -128,6 +140,53 @@
 ║  │  任务规划 → Agent分配 → 执行 → 审核 → 反馈 → 重规划  │║
 ║  └──────────────────────────────────────────────────────┘║
 ╚══════════════════════════════════════════════════════════╝</code></pre>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 384" role="img" aria-labelledby="srT srD">
+          <title id="srT">SERA 自进化研发助手 MAS 的四 Agent 架构与闭环</title>
+          <desc id="srD">Architect、Researcher、Engineer、Reviewer 四个 Agent 通过 A2A 双向通信，各自挂载 MCP 工具；底层 LangGraph StateGraph 编排层负责规划-分配-执行-审核-反馈-重规划，并把反馈回灌形成自进化闭环。</desc>
+          <rect width="820" height="384" fill="#fbfaff"/>
+          <g font-size="13">
+            <rect x="110" y="40" width="250" height="72" rx="10" fill="#ede9fe" stroke="#7c3aed"/>
+            <text x="235" y="64" text-anchor="middle" fill="#4c1d95">Architect（任务分解）</text>
+            <text x="235" y="84" text-anchor="middle" font-size="11" fill="#6d28d9">任务分解树 · 实验方案</text>
+            <text x="235" y="101" text-anchor="middle" font-size="11" fill="#6d28d9">MCP: Task Planner</text>
+            <rect x="460" y="40" width="250" height="72" rx="10" fill="#ccfbf1" stroke="#0f766e"/>
+            <text x="585" y="64" text-anchor="middle" fill="#0f766e">Researcher（文献搜索）</text>
+            <text x="585" y="84" text-anchor="middle" font-size="11" fill="#0f766e">文献综述 · 基线参考</text>
+            <text x="585" y="101" text-anchor="middle" font-size="11" fill="#0f766e">MCP: ArXiv / Semantic Scholar</text>
+            <rect x="110" y="160" width="250" height="72" rx="10" fill="#ccfbf1" stroke="#0f766e"/>
+            <text x="235" y="184" text-anchor="middle" fill="#0f766e">Engineer（代码实现）</text>
+            <text x="235" y="204" text-anchor="middle" font-size="11" fill="#0f766e">可运行代码 · 实验数据</text>
+            <text x="235" y="221" text-anchor="middle" font-size="11" fill="#0f766e">MCP: Python / GitHub / Docker</text>
+            <rect x="460" y="160" width="250" height="72" rx="10" fill="#fef3c7" stroke="#b45309"/>
+            <text x="585" y="184" text-anchor="middle" fill="#92400e">Reviewer（结果分析）</text>
+            <text x="585" y="204" text-anchor="middle" font-size="11" fill="#92400e">分析报告 · 改进提案</text>
+            <text x="585" y="221" text-anchor="middle" font-size="11" fill="#92400e">MCP: Sandbox / Report Gen</text>
+          </g>
+          <line x1="360" y1="76" x2="456" y2="76" stroke="#7c3aed" stroke-width="2" marker-end="url(#sra)"/>
+          <line x1="456" y1="90" x2="360" y2="90" stroke="#7c3aed" stroke-width="2" marker-end="url(#sra)"/>
+          <line x1="235" y1="112" x2="235" y2="156" stroke="#0f766e" stroke-width="2" marker-end="url(#srb)"/>
+          <line x1="585" y1="112" x2="585" y2="156" stroke="#0f766e" stroke-width="2" marker-end="url(#srb)"/>
+          <text x="410" y="78" font-size="11" text-anchor="middle" fill="#6d28d9">A2A</text>
+          <rect x="40" y="290" width="720" height="64" rx="10" fill="#e0e7ff" stroke="#4338ca"/>
+          <text x="400" y="316" text-anchor="middle" font-size="13" fill="#3730a3">LangGraph 编排层（StateGraph）</text>
+          <text x="400" y="338" text-anchor="middle" font-size="12" fill="#3730a3">任务规划 → Agent 分配 → 执行 → 审核 → 反馈 → 重规划</text>
+          <line x1="235" y1="232" x2="235" y2="286" stroke="#4338ca" stroke-width="2" marker-end="url(#src)"/>
+          <line x1="585" y1="232" x2="585" y2="286" stroke="#4338ca" stroke-width="2" marker-end="url(#src)"/>
+          <path d="M760 322 L800 322 L800 20 L235 20 L235 37" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#srd)"/>
+          <text x="600" y="16" font-size="11" fill="#92400e">自进化闭环：反馈 → 重新规划</text>
+          <defs>
+            <marker id="sra" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+            <marker id="srb" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0f766e"/></marker>
+            <marker id="src" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4338ca"/></marker>
+            <marker id="srd" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b45309"/></marker>
+          </defs>
+        </svg>
+        </div>
+        <figcaption>SERA 架构：四个关注点分离的 Agent（Architect 分解任务、Researcher 搜文献、Engineer 写代码跑实验、Reviewer 分析结果）用 A2A 双向交换信息，各自通过 MCP 挂载领域工具；底层 LangGraph 编排层把「规划-分配-执行-审核-反馈-重规划」串成工作流，并把反馈回灌形成图中的琥珀色自进化闭环。角色与工具依据本章 28.2 的架构图与「四个Agent角色」表。</figcaption>
+        </figure>
 
         <h3>四个Agent角色</h3>
 
@@ -585,7 +644,7 @@ class SERASystem:
             <a href="index.html">📖 返回目录</a>
             <a href="javascript:void(0)">已完结 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
