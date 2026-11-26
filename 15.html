@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第15章 A2A协议：智能体互联网</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第15章 A2A协议：智能体互联网</h2>
+        <h1 class="page-title">第15章 A2A协议：智能体互联网</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第15章 A2A协议：智能体互联网</p>
 
         <p>还记得上一章我们讨论的MCP吗？MCP解决了Agent与工具之间的"最后一公里"——让每个Agent都能通过统一协议调用数据库、文件系统、API等各种工具。但这里留下了一个更棘手的问题：<strong>Agent与Agent之间怎么通信？</strong></p>
 
@@ -187,6 +199,48 @@
                  ┌────▼─────┐
                  │ REJECTED │
                  └──────────┘</code></pre>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 400" role="img" aria-labelledby="fsmT fsmD">
+          <title id="fsmT">A2A 任务生命周期状态机</title>
+          <desc id="fsmD">SUBMITTED 提交后进入 WORKING；执行中可暂停为 INPUT_REQUIRED 或 AUTH_REQUIRED，补齐后回到 WORKING；WORKING 终止于 COMPLETED、FAILED、CANCELED 或 REJECTED。</desc>
+          <rect width="820" height="400" fill="#fbfaff"/>
+          <g font-size="13" text-anchor="middle">
+            <rect x="335" y="20" width="150" height="40" rx="10" fill="#ede9fe" stroke="#7c3aed"/><text x="410" y="45" fill="#4c1d95">SUBMITTED</text>
+            <rect x="335" y="100" width="150" height="40" rx="10" fill="#e0e7ff" stroke="#4f46e5"/><text x="410" y="125" fill="#3730a3">WORKING</text>
+            <rect x="60" y="180" width="170" height="40" rx="10" fill="#fef3c7" stroke="#b45309"/><text x="145" y="205" fill="#92400e">INPUT_REQUIRED</text>
+            <rect x="590" y="180" width="170" height="40" rx="10" fill="#fef3c7" stroke="#b45309"/><text x="675" y="205" fill="#92400e">AUTH_REQUIRED</text>
+            <rect x="60" y="290" width="150" height="40" rx="10" fill="#ccfbf1" stroke="#0f766e"/><text x="135" y="315" fill="#0f766e">COMPLETED</text>
+            <rect x="240" y="290" width="130" height="40" rx="10" fill="#fee2e2" stroke="#b91c1c"/><text x="305" y="315" fill="#b91c1c">FAILED</text>
+            <rect x="395" y="290" width="140" height="40" rx="10" fill="#f1f5f9" stroke="#64748b"/><text x="465" y="315" fill="#475569">CANCELED</text>
+            <rect x="560" y="290" width="150" height="40" rx="10" fill="#fee2e2" stroke="#b91c1c"/><text x="635" y="315" fill="#b91c1c">REJECTED</text>
+          </g>
+          <g fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#fa)">
+            <line x1="410" y1="60" x2="410" y2="96"/>
+            <path d="M335 118 L145 118 L145 176"/>
+            <path d="M485 118 L675 118 L675 176"/>
+          </g>
+          <g fill="none" stroke="#b45309" stroke-width="2" marker-end="url(#fb)">
+            <path d="M170 220 L170 250 L360 250 L360 144 L335 144"/>
+            <path d="M650 220 L650 250 L460 250 L460 144 L485 144"/>
+          </g>
+          <g fill="none" stroke="#475569" stroke-width="2" marker-end="url(#fc)">
+            <path d="M360 140 L135 140 L135 286"/>
+            <line x1="410" y1="140" x2="410" y2="286"/>
+            <path d="M460 140 L465 140 L465 286"/>
+            <path d="M410 140 L635 140 L635 286"/>
+          </g>
+          <text x="145" y="245" font-size="11" text-anchor="middle" fill="#92400e">补齐输入后回到 WORKING</text>
+          <defs>
+            <marker id="fa" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+            <marker id="fb" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b45309"/></marker>
+            <marker id="fc" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#475569"/></marker>
+          </defs>
+        </svg>
+        </div>
+        <figcaption>A2A v1.0 任务状态机的可视化：与上面的等宽文本图一致。关键在于两个「暂停态」——INPUT_REQUIRED（缺输入）与 AUTH_REQUIRED（缺授权）可以从 WORKING 转入并可恢复，避免了「一失败就重建任务」。状态名与转移关系依据本章 15.3 给出的 v1.0 定义。</figcaption>
+        </figure>
 
         <p>这个状态机设计的精妙之处在于<strong>两个暂停状态</strong>：<code>INPUT_REQUIRED</code>和<code>AUTH_REQUIRED</code>。它们让A2A能够处理真实世界中那些"需要停下来等人"的场景。</p>
 
@@ -423,7 +477,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="16.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
