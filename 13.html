@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第13章 框架选型与混合架构</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第13章 框架选型与混合架构</h2>
+        <h1 class="page-title">第13章 框架选型与混合架构</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第13章 框架选型与混合架构</p>
 
         <p>前四章我们深入了四个主流多Agent框架——LangGraph、CrewAI、AutoGen/MAF、MetaGPT。如果你全都读懂了，你现在面临一个幸福的烦恼：<strong>项目里到底用哪个？</strong></p>
 
@@ -305,6 +317,41 @@
 
         <p>一个简单但极其有效的优化策略是<strong>难度感知路由（Difficulty-Aware Routing）</strong>。核心思想是：<strong>不要让所有任务都走多Agent流程</strong>——简单任务交给单Agent快速处理，只有复杂任务才启动多Agent协作。</p>
 
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 300" role="img" aria-labelledby="rtT rtD">
+          <title id="rtT">难度感知路由：简单任务走单 Agent，复杂任务才启动多 Agent</title>
+          <desc id="rtD">流程：任务输入 → 难度分类器 → 低/中难度走高性价比单 Agent 路径；高难度走高成本多 Agent 协作路径，两条路径在末端汇合输出结果。</desc>
+          <rect width="820" height="300" fill="#fbfaff"/>
+          <rect x="330" y="25" width="160" height="44" rx="10" fill="#ede9fe" stroke="#7c3aed"/>
+          <text x="410" y="53" font-size="14" text-anchor="middle" fill="#4c1d95">任务输入</text>
+          <line x1="410" y1="69" x2="410" y2="95" stroke="#7c3aed" stroke-width="2" marker-end="url(#a1)"/>
+          <rect x="330" y="95" width="160" height="44" rx="22" fill="#eff6ff" stroke="#2563eb"/>
+          <text x="410" y="123" font-size="14" text-anchor="middle" fill="#1e40af">难度分类器</text>
+          <path d="M410 139 L410 165 L170 165 L170 190" fill="none" stroke="#0f766e" stroke-width="2" marker-end="url(#a2)"/>
+          <path d="M410 139 L410 165 L650 165 L650 190" fill="none" stroke="#b45309" stroke-width="2" marker-end="url(#a3)"/>
+          <text x="215" y="158" font-size="12" fill="#0f766e">低 / 中难度（大多数任务）</text>
+          <text x="500" y="158" font-size="12" fill="#b45309">高难度（少数任务）</text>
+          <rect x="80" y="190" width="180" height="50" rx="10" fill="#ccfbf1" stroke="#0f766e"/>
+          <text x="170" y="213" font-size="13" text-anchor="middle" fill="#0f766e">单 Agent 快路径</text>
+          <text x="170" y="231" font-size="12" text-anchor="middle" fill="#0f766e">低 Token / 低延迟</text>
+          <rect x="560" y="190" width="180" height="50" rx="10" fill="#fef3c7" stroke="#b45309"/>
+          <text x="650" y="213" font-size="13" text-anchor="middle" fill="#92400e">多 Agent 协作路径</text>
+          <text x="650" y="231" font-size="12" text-anchor="middle" fill="#92400e">高 Token / 高准确率</text>
+          <line x1="170" y1="240" x2="170" y2="272" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="650" y1="240" x2="650" y2="272" stroke="#94a3b8" stroke-width="2"/>
+          <line x1="170" y1="272" x2="650" y2="272" stroke="#94a3b8" stroke-width="2"/>
+          <text x="410" y="292" font-size="13" text-anchor="middle" fill="#475569">输出结果</text>
+          <defs>
+            <marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+            <marker id="a2" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0f766e"/></marker>
+            <marker id="a3" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b45309"/></marker>
+          </defs>
+        </svg>
+        </div>
+        <figcaption>难度感知路由的决策流：先用轻量分类器估计任务复杂度，简单/中等任务走低成本的单 Agent 快路径，只有真正复杂的任务才启动多 Agent 协作，两条路径最后汇合输出。路由比例的收益幅度依任务分布而异，下文引用的 72%/28% 与降本数字为具体项目经验值，非普遍基准。</figcaption>
+        </figure>
+
         <p>实现起来很简单：</p>
 
         <pre><code>class TaskRouter:
@@ -399,7 +446,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="14.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
