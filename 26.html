@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第26章 具身集体智能</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第26章 具身集体智能</h2>
+        <h1 class="page-title">第26章 具身集体智能</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第26章 具身集体智能</p>
 
         <p>你好！我们终于来到了全书最"硬核"的一章。前25章我们讨论的Agent，无论多复杂、多智能，本质上都生活在<strong>数字世界</strong>——它们处理文本、调用API、生成代码。它们没有身体，没有物理坐标，不需要担心撞到墙或者电池没电。这一章，我们要把这些Agent<strong>装进机器人的身体里</strong>，让它们在真实物理世界中感知、行动、协作。</p>
 
@@ -123,6 +135,40 @@
         <h2>26.2 Co-Perception / Co-Action / Co-Evolution 框架</h2>
 
         <p>2026年6月，一个标志性的多机器人协作框架被提出——<strong>3C框架：Co-Perception（共感知）、Co-Action（共行动）、Co-Evolution（共进化）</strong>。这个框架将具身集体智能的系统设计从"单体智能++"提升到了"系统级协同"的层面。我们来逐一拆解。</p>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 300" role="img" aria-labelledby="c3T c3D">
+          <title id="c3T">3C 框架：共感知、共行动、共进化的协同循环</title>
+          <desc id="c3D">Co-Perception 把各机器人的局部感知融合成共享世界记忆；Co-Action 在此基础上做物理协同、空间协调与编队行动；Co-Evolution 从集体经验中更新共享策略，并把学到的东西反馈回感知与行动，形成闭环。</desc>
+          <rect width="820" height="300" fill="#fbfaff"/>
+          <g text-anchor="middle">
+            <rect x="25" y="70" width="220" height="120" rx="12" fill="#ccfbf1" stroke="#0f766e"/>
+            <text x="135" y="100" font-size="14" fill="#0f766e">Co-Perception</text>
+            <text x="135" y="124" font-size="12" fill="#0f766e">局部感知 → 共享世界记忆</text>
+            <text x="135" y="144" font-size="12" fill="#0f766e">看队友所见</text>
+            <rect x="300" y="70" width="220" height="120" rx="12" fill="#ede9fe" stroke="#7c3aed"/>
+            <text x="410" y="100" font-size="14" fill="#4c1d95">Co-Action</text>
+            <text x="410" y="124" font-size="12" fill="#6d28d9">物理协作 / 空间协调</text>
+            <text x="410" y="144" font-size="12" fill="#6d28d9">编队保持</text>
+            <rect x="575" y="70" width="220" height="120" rx="12" fill="#fef3c7" stroke="#b45309"/>
+            <text x="685" y="100" font-size="14" fill="#92400e">Co-Evolution</text>
+            <text x="685" y="124" font-size="12" fill="#92400e">集体经验 → 共享策略池</text>
+            <text x="685" y="144" font-size="12" fill="#92400e">新成员继承知识</text>
+          </g>
+          <line x1="245" y1="130" x2="296" y2="130" stroke="#0f766e" stroke-width="2" marker-end="url(#c3a)"/>
+          <line x1="520" y1="130" x2="571" y2="130" stroke="#7c3aed" stroke-width="2" marker-end="url(#c3b)"/>
+          <path d="M685 190 L685 250 L135 250 L135 194" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#c3c)"/>
+          <text x="410" y="268" font-size="12" text-anchor="middle" fill="#92400e">共享策略回馈感知与行动（闭环）</text>
+          <defs>
+            <marker id="c3a" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0f766e"/></marker>
+            <marker id="c3b" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+            <marker id="c3c" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b45309"/></marker>
+          </defs>
+        </svg>
+        </div>
+        <figcaption>3C 不是三个独立模块，而是一个闭环：Co-Perception 用共享世界记忆把局部感知放大成集体视角，Co-Action 在此视角下做物理协作与空间协调，Co-Evolution 把集体经验汇入共享策略池，再把学到的策略回馈给前两层。三者由本节 26.2.1–26.2.3 的顺序展开。</figcaption>
+        </figure>
 
         <h3>26.2.1 Co-Perception（共感知）</h3>
 
@@ -375,7 +421,7 @@ message SemanticObject {
             <a href="index.html">📖 返回目录</a>
             <a href="27.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
