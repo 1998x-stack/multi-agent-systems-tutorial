@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第21章 多智能体自进化</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第21章 多智能体自进化</h2>
+        <h1 class="page-title">第21章 多智能体自进化</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第21章 多智能体自进化</p>
 
         <p>上一章我们探讨了元认知——让Agent"认识自己"。这是一个了不起的进步，但它本质上还是<strong>静态的</strong>：Agent知道了自己的能力边界，但能力本身并没有提升。就像一个知道自己跑得不快的人，虽然不会逞强去参加百米赛跑，但他也没有因此变得更快。</p>
 
@@ -119,6 +131,32 @@
                 </tr>
             </tbody>
         </table>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 340" role="img" aria-labelledby="lifeT lifeD">
+          <title id="lifeT">LIFE Progression 四阶段与元进化循环</title>
+          <desc id="lifeD">四个递进阶段：个体能力进化、协作整合进化、失败归因进化、自进化能力进化；第四阶段又反向改进前三个阶段，形成元进化循环。</desc>
+          <rect width="820" height="340" fill="#fbfaff"/>
+          <g font-size="13">
+            <rect x="180" y="24" width="420" height="46" rx="10" fill="#ede9fe" stroke="#7c3aed"/><text x="200" y="52" fill="#4c1d95">① 个体能力进化 · 提示词/推理/工具</text>
+            <rect x="180" y="88" width="420" height="46" rx="10" fill="#e9d5ff" stroke="#7c3aed"/><text x="200" y="116" fill="#5b21b6">② 协作整合进化 · 协议/消息/协调</text>
+            <rect x="180" y="152" width="420" height="46" rx="10" fill="#ddd6fe" stroke="#7c3aed"/><text x="200" y="180" fill="#5b21b6">③ 失败归因进化 · 错误模式库/回溯</text>
+            <rect x="180" y="216" width="420" height="46" rx="10" fill="#fef3c7" stroke="#b45309"/><text x="200" y="244" fill="#92400e">④ 自进化能力进化 · 进化策略/验证</text>
+          </g>
+          <g stroke="#7c3aed" stroke-width="2" marker-end="url(#lfa)">
+            <line x1="390" y1="70" x2="390" y2="84"/><line x1="390" y1="134" x2="390" y2="148"/><line x1="390" y1="198" x2="390" y2="212"/>
+          </g>
+          <path d="M600 239 L720 239 L720 47 L604 47" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#lfb)"/>
+          <text x="700" y="150" font-size="12" fill="#92400e" transform="rotate(-90 700 150)">元进化反馈</text>
+          <defs>
+            <marker id="lfa" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+            <marker id="lfb" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b45309"/></marker>
+          </defs>
+        </svg>
+        </div>
+        <figcaption>LIFE Progression 的四个递进阶段：从提升单个 Agent 的能力，到优化协作、归因失败，最后让「进化的能力」本身也可进化；第四阶段通过元进化反馈去改进前三个阶段。阶段名称与进化对象依据本章 21.2 表格（源框架为西安交大团队 2025 年工作）。</figcaption>
+        </figure>
 
         <p>这个四阶段的精妙之处在于它形成了一个<strong>元进化循环</strong>——前三阶段让Agent变得更好，第四阶段让"变得更好的能力"变得更好。这正是通用智能的关键特征：不仅仅是做事情的能力在提升，提升能力的能力也在提升。</p>
 
@@ -300,7 +338,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="22.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
