@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
     <title>第22章 端到端RL训练智能体系统</title>
     <link rel="stylesheet" href="theme.css">
+    <style>
+        pre { overflow-x: auto; max-width: 100%; }
+        code { overflow-wrap: anywhere; }
+        img, svg { max-width: 100%; height: auto; }
+        figure svg { width: 100%; height: auto; display: block; }
+        .fig-scroll, .math-scroll { overflow-x: auto; }
+        @media (max-width: 768px) {
+            table { table-layout: fixed; width: 100%; }
+            th, td { word-break: break-word; }
+        }
+    </style>
 </head>
 <body>
 <div class="double-border">
 <div class="container">
-    <div class="sidebar">
+    <nav class="sidebar" aria-label="课程目录">
         <h3>🤖 课程目录</h3>
         <ul class="chapter-list">
             <li><a href="01.html">第1章 智能体革命：从单体到多体</a></li>
@@ -41,10 +52,11 @@
             <li><a href="27.html">第27章 Agent互联网与开放生态</a></li>
             <li><a href="28.html">第28章 综合项目：构建自进化研发助手MAS</a></li>
         </ul>
-    </div>
-    <div class="main-content">
+    </nav>
+    <main class="main-content">
 
-        <h2>第22章 端到端RL训练智能体系统</h2>
+        <h1 class="page-title">第22章 端到端RL训练智能体系统</h1>
+        <p class="breadcrumb"><a href="index.html">课程目录</a> › 第22章 端到端RL训练智能体系统</p>
 
         <p>我们花了很多章节讨论如何"设计"多智能体系统。从LangGraph的图状态机、CrewAI的角色化团队、到去中心化拓扑和元认知自评估——所有这些都是<strong>手工设计</strong>的产物。上一章的自进化让我们迈出了一大步：系统可以在运行中自我优化。但自进化有一个根本的局限性——<strong>它依赖启发式策略</strong>（Reflection、GA、Textual Gradient），没有全局优化的数学框架。</p>
 
@@ -130,6 +142,38 @@
                 )
 
                 return designer_loss + executor_loss</code></pre>
+
+        <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 820 330" role="img" aria-labelledby="mexT mexD">
+          <title id="mexT">MetaAgent-X 的设计者-执行者分层与分阶段共进化</title>
+          <desc id="mexD">设计者网络根据聚合状态输出策略参数给一组执行者 Agent；执行者回传轨迹与奖励；训练时分阶段交替：先锁定执行者训练设计者，再锁定设计者蒸馏执行者。</desc>
+          <rect width="820" height="330" fill="#fbfaff"/>
+          <rect x="290" y="24" width="240" height="52" rx="10" fill="#ede9fe" stroke="#7c3aed"/>
+          <text x="410" y="47" font-size="14" text-anchor="middle" fill="#4c1d95">Designer 策略网络</text>
+          <text x="410" y="66" font-size="12" text-anchor="middle" fill="#6d28d9">输入：聚合状态 → 输出：策略参数</text>
+          <rect x="230" y="200" width="360" height="70" rx="12" fill="#ccfbf1" stroke="#0f766e"/>
+          <text x="410" y="224" font-size="14" text-anchor="middle" fill="#0f766e">Executor Agent 群体（N 个）</text>
+          <g font-size="12" text-anchor="middle">
+            <rect x="255" y="236" width="90" height="26" rx="6" fill="#f0fdfa" stroke="#5eead4"/><text x="300" y="254" fill="#0f766e">Agent 1</text>
+            <rect x="365" y="236" width="90" height="26" rx="6" fill="#f0fdfa" stroke="#5eead4"/><text x="410" y="254" fill="#0f766e">Agent 2</text>
+            <rect x="475" y="236" width="90" height="26" rx="6" fill="#f0fdfa" stroke="#5eead4"/><text x="520" y="254" fill="#0f766e">… N</text>
+          </g>
+          <line x1="350" y1="76" x2="350" y2="196" stroke="#7c3aed" stroke-width="2" marker-end="url(#mxa)"/>
+          <text x="300" y="140" font-size="12" fill="#6d28d9">策略参数 ↓</text>
+          <line x1="470" y1="196" x2="470" y2="80" stroke="#0f766e" stroke-width="2" marker-end="url(#mxb)"/>
+          <text x="484" y="140" font-size="12" fill="#0f766e">↑ 轨迹 + 奖励</text>
+          <path d="M600 260 L730 260 L730 50 L536 50" fill="none" stroke="#b45309" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#mxc)"/>
+          <text x="712" y="160" font-size="12" fill="#92400e" transform="rotate(-90 712 160)">分阶段交替更新</text>
+          <defs>
+            <marker id="mxa" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7c3aed"/></marker>
+            <marker id="mxb" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0f766e"/></marker>
+            <marker id="mxc" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#b45309"/></marker>
+          </defs>
+        </svg>
+        </div>
+        <figcaption>MetaAgent-X 的分层：Designer 是可学习的策略网络，负责「系统该用什么策略」，Executor 是一组按当前策略行动的 Agent，回传轨迹和奖励；两者不是同步更新，而是分阶段交替（先锁定执行者训练设计者，再锁定设计者蒸馏执行者），以避免「两边都在变」的训练不稳定。结构与训练流程依据本章 22.2 与伪代码，Agent 数量为示意。</figcaption>
+        </figure>
 
         <h3>22.2.2 Stagewise Co-evolution：分阶段共进化</h3>
         <p>MetaAgent-X提出了<strong>分阶段共进化（Stagewise Co-evolution）</strong>训练策略。简单来说：不是在每一步都同时更新设计者和执行者，而是分阶段交替进行——先锁定执行者，训练设计者几轮；再锁定设计者，蒸馏执行者几轮；如此交替。这种交替训练避免了"两个都在变，乱了套"的困境——这也呼应了上一章Meta-Team中的"进化同步"思想。</p>
@@ -298,7 +342,7 @@
             <a href="index.html">📖 返回目录</a>
             <a href="23.html">下一章 →</a>
         </div>
-    </div>
+    </main>
 </div>
 </div>
 </body>
